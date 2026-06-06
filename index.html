@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Planner Pro V7</title>
+    <style>
+        :root { --bg: #1e1e1e; --panel: #2d2d2d; --text: #e0e0e0; --accent: #4caf50; --border: #444; }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        button, input, select, textarea { background: #121212; color: white; border: 1px solid var(--border); padding: 8px 12px; border-radius: 4px; font-size: 14px; }
+        button { background: var(--accent); cursor: pointer; border: none; font-weight: bold; }
+        button:hover { opacity: 0.8; }
+        .btn-secondary { background: #555; }
+        .btn-danger { background: #f44336; }
+        .tag-badge { background: #444; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; }
+        .pos { color: #4caf50; } .neg { color: #f44336; }
+        
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        
+        header { background: var(--panel); padding: 15px 20px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        #save-status { font-size: 0.8em; color: #aaa; margin-left: auto; }
+
+        /* --- DASHBOARD VIEW --- */
+        #dashboardView { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        #dashScrollWrapper { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 40px; }
+        
+        #board { gap: 20px; flex-shrink: 0; }
+        #board.board-horizontal { display: flex; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 15px; align-items: flex-start; }
+        #board.board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); width: 100%; align-items: flex-start; }
+        
+        .month-col { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; min-width: 400px; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.1s; }
+        .month-col:hover { border-color: #666; }
+        .month-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+        .month-header button { pointer-events: auto; }
+        .summary-top { padding: 10px 15px; font-size: 0.9em; border-bottom: 1px dashed var(--border); pointer-events: none;}
+        .summary-bottom { padding: 10px 15px; font-size: 0.9em; background: #252525; border-top: 1px dashed var(--border); border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; pointer-events: none;}
+        .items-container { padding: 10px; min-height: 150px; flex-grow: 1; display: flex; flex-direction: column; gap: 8px; pointer-events: none;}
+        
+        .board-horizontal .month-col { min-height: 55vh; }
+        .board-grid.scrollable-items .items-container { max-height: 250px; overflow-y: auto; pointer-events: auto; }
+        .board-grid.scrollable-items .items-container::-webkit-scrollbar { width: 8px; }
+        .board-grid.scrollable-items .items-container::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+        
+        .dash-item { background: #222; border-left: 5px solid; padding: 10px; border-radius: 4px; pointer-events: auto; cursor: grab; }
+        .dash-item.done { opacity: 0.4; }
+        
+        #bottomSections { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .special-box { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; min-height: 300px;}
+        
+        /* --- DEDICATED MONTH PAGE VIEW --- */
+        #monthView { display: none; flex-direction: column; flex-grow: 1; overflow: hidden; }
+        .page-header { background: #222; padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        #pageSummaryBar { background: #252525; padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 1.1em; flex-shrink: 0; }
+        
+        .page-content { padding: 20px; flex-grow: 1; overflow-y: auto; }
+        .page-footer { background: var(--panel); border-top: 2px solid var(--border); padding: 25px; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
+        .large-inputs input, .large-inputs select, .large-inputs button { padding: 12px 15px; font-size: 1.1em; }
+        
+        .view-vertical { display: flex; flex-direction: column; gap: 12px; }
+        .view-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px 15px; align-items: start; align-content: start; }
+        
+        .page-item-card { background: #222; border-left: 6px solid; padding: 15px; border-radius: 6px; border: 1px solid var(--border); transition: 0.2s; cursor: grab; }
+        .page-item-card.done { opacity: 0.4; background: #1a1a1a; }
+        
+        .color-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; max-width: 400px;}
+        .color-swatch { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .color-swatch.selected { border-color: white; transform: scale(1.1); }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; }
+        .modal { background: var(--panel); padding: 25px; border-radius: 8px; border: 1px solid var(--border); min-width: 400px; max-width: 600px; max-height: 80vh; overflow-y: auto;}
+    </style>
+</head>
+<body>
+
+<div id="dashboardView">
+    <header>
+        <div style="display:flex; align-items:center; gap: 10px; font-size: 1.2em;">
+            <button onclick="changeYear(-1)">◀</button>
+            <strong id="yearDisplay">2026</strong>
+            <button onclick="changeYear(1)">▶</button>
+        </div>
+        <div style="border-left: 1px solid var(--border); padding-left: 15px;">
+            <label>Global Salary: </label>
+            <input type="number" step="any" id="globalSalary" style="width: 90px;" onchange="updateGlobalSalary(this.value)">
+        </div>
+        
+        <button id="boardLayoutBtn" class="btn-secondary" onclick="toggleBoardLayout()">Layout: Horizontal</button>
+        
+        <label id="gridScrollLabel" style="display:none; cursor:pointer;">
+            <input type="checkbox" id="gridScrollCb" onchange="renderBoard()"> Scroll Items in Grid
+        </label>
+        
+        <button class="btn-secondary" onclick="openTagsModal()">Tags</button>
+        <button class="btn-secondary" onclick="openAnalyticsModal()">📊 Analytics</button>
+        
+        <div style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
+            <span id="save-status"></span>
+            <label><input type="checkbox" id="autosave" checked> Autosave</label>
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+            <button class="btn-secondary" onclick="document.getElementById('importFile').click()">Import .json</button>
+            <button onclick="exportJSON()">Export .json</button>
+        </div>
+    </header>
+    
+    <div id="dashScrollWrapper">
+        <div id="board" class="board-horizontal"></div>
+        
+        <div id="bottomSections">
+            <div class="month-col special-box" id="longTermBox" ondblclick="openMonthPage('LongTerm')"></div>
+            <div class="special-box" id="piggyBox"></div>
+            <div class="special-box" style="padding: 15px; display:flex; flex-direction:column;">
+                <div style="font-size: 1.2em; font-weight: bold; border-bottom: 1px dashed var(--border); padding-bottom: 10px; margin-bottom: 10px;">Quick Notes</div>
+                <textarea id="quickNotes" style="flex-grow: 1; resize: none; background: #222;" placeholder="Write global plans, ideas, or reminders here..." oninput="updateNotes(this.value)"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="monthView">
+    <div class="page-header">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <button class="btn-secondary" onclick="closeMonthPage()">◀ Back (Esc)</button>
+            <h2 id="pageMonthTitle" style="margin: 0;">Month Name</h2>
+        </div>
+        
+        <div style="display:flex; gap: 15px; align-items: center;">
+            <div id="salaryOverrideContainer">
+                <label>Month Salary Override: </label>
+                <input type="number" step="any" id="pageSalary" placeholder="Uses global if empty" onchange="setMonthSalary(this.value)">
+            </div>
+            <div>
+                <label>Sort: </label>
+                <select id="pageSort" onchange="renderPageItems()">
+                    <option value="none">Added Order</option>
+                    <option value="costDesc">Highest Cost</option>
+                    <option value="costAsc">Lowest Cost</option>
+                    <option value="tag">Group by Tag</option>
+                </select>
+            </div>
+            <button id="pageLayoutBtn" class="btn-secondary" onclick="togglePageLayout()">Layout: Vertical</button>
+        </div>
+    </div>
+    
+    <div id="pageSummaryBar"></div>
+    
+    <div class="page-content" id="pageItemsContainer" class="view-vertical"></div>
+    
+    <div class="page-footer">
+        <div style="font-size: 1.2em; font-weight: bold;">Add New Expense / Plan</div>
+        <div class="large-inputs" style="display:flex; gap: 15px; flex-wrap: wrap;">
+            <input type="text" id="itemName" placeholder="What is it?" style="flex-grow: 1; min-width: 250px;" oninput="checkAutoTag(this.value)">
+            <input type="number" step="any" id="itemCost" placeholder="Cost ₾" style="width:120px;">
+            <input type="number" step="any" id="itemQty" placeholder="Qty" value="1" style="width:80px;" min="1">
+            <select id="itemTag" style="width: 200px;"></select>
+            <button onclick="addItem()" style="padding: 12px 30px;">Add to List</button>
+        </div>
+        <div style="display:flex; align-items: center; gap: 20px;">
+            <div class="color-grid" id="colorPicker"></div>
+            <div style="display:flex; flex-direction: column; gap: 5px;">
+                <label style="font-size:0.9em; color:#aaa;">Custom Color</label>
+                <input type="color" id="customColor" onchange="selectCustomColor(this.value)" style="padding:0; width:40px; height:40px; cursor:pointer;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="tagsModal">
+    <div class="modal">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 1.2em; font-weight:bold;">
+            <span>Manage Tags</span>
+            <button class="btn-danger" onclick="document.getElementById('tagsModal').style.display='none'">X</button>
+        </div>
+        <div style="display:flex; gap: 10px; margin-bottom: 15px;">
+            <input type="text" id="newTag" placeholder="New Tag Name" style="flex-grow: 1;">
+            <button onclick="addTag()">Add Tag</button>
+        </div>
+        <ul id="tagList" style="list-style: none; padding: 0;"></ul>
+    </div>
+</div>
+
+<div class="modal-overlay" id="analyticsModal">
+    <div class="modal">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 1.2em; font-weight:bold;">
+            <span id="analyticsTitle">Yearly Analytics</span>
+            <button class="btn-danger" onclick="document.getElementById('analyticsModal').style.display='none'">X</button>
+        </div>
+        <div id="analyticsContent" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+</div>
+
+<script>
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const presetColors = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#9e9e9e", "#607d8b", "#ffffff"];
+    
+    let state = { globalSalary: 2000, tags: ["Essentials", "Hardware", "Leisure", "Savings"], years: {}, longTerm: { items: [] }, piggyBanks: [], notes: "" };
+    
+    let currentYear = new Date().getFullYear();
+    let activeMonth = null;
+    let selectedColor = "#4caf50";
+    let boardLayout = 'horizontal';
+    let pageLayout = 'view-vertical';
+    let draggedPageItemId = null; 
+
+    function fmt(num) { return Number(Math.round(num + "e2") + "e-2"); }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape" && activeMonth !== null) closeMonthPage();
+    });
+
+    function init() {
+        let saved = localStorage.getItem('financeDataV7');
+        if (saved) {
+            state = JSON.parse(saved);
+            if (!state.longTerm) state.longTerm = { items: [] };
+            if (!state.piggyBanks) state.piggyBanks = [];
+            if (state.notes === undefined) state.notes = "";
+        }
+        if (!state.years[currentYear]) generateYear(currentYear);
+        initUI();
+    }
+
+    function initUI() {
+        document.getElementById('globalSalary').value = state.globalSalary;
+        document.getElementById('yearDisplay').innerText = currentYear;
+        document.getElementById('quickNotes').value = state.notes;
+        initColorPicker();
+        updateTagSelects();
+        renderBoard();
+        renderExtras();
+    }
+
+    function generateYear(year) {
+        state.years[year] = {};
+        months.forEach(m => state.years[year][m] = { salary: null, items: [] });
+    }
+
+    function changeYear(dir) {
+        currentYear += dir;
+        if (!state.years[currentYear]) generateYear(currentYear);
+        initUI();
+    }
+
+    function updateGlobalSalary(val) { state.globalSalary = parseFloat(val) || 0; renderBoard(); autoSave(); }
+    function updateNotes(val) { state.notes = val; autoSave(); }
+
+    function toggleBoardLayout() {
+        boardLayout = boardLayout === 'horizontal' ? 'grid' : 'horizontal';
+        document.getElementById('boardLayoutBtn').innerText = boardLayout === 'horizontal' ? 'Layout: Horizontal' : 'Layout: Grid';
+        renderBoard();
+    }
+
+    function togglePageLayout() {
+        pageLayout = pageLayout === 'view-vertical' ? 'view-grid' : 'view-vertical';
+        document.getElementById('pageLayoutBtn').innerText = pageLayout === 'view-vertical' ? 'Layout: Vertical' : 'Layout: Grid';
+        renderPageItems();
+    }
+
+    // --- DASHBOARD RENDERING ---
+    function renderBoard() {
+        const board = document.getElementById('board');
+        board.innerHTML = '';
+        board.className = 'board-' + boardLayout;
+        
+        let gridScrollLabel = document.getElementById('gridScrollLabel');
+        let gridScrollCb = document.getElementById('gridScrollCb');
+        if (boardLayout === 'grid') {
+            gridScrollLabel.style.display = 'inline-flex';
+            if (gridScrollCb.checked) board.classList.add('scrollable-items');
+            else board.classList.remove('scrollable-items');
+        } else {
+            gridScrollLabel.style.display = 'none';
+            board.classList.remove('scrollable-items');
+        }
+        
+        months.forEach(month => {
+            let mData = state.years[currentYear][month];
+            let sal = mData.salary !== null ? mData.salary : state.globalSalary;
+            
+            let plannedSpent = fmt(mData.items.reduce((s, i) => s + (i.cost * i.qty), 0));
+            let actualSpent = fmt(mData.items.filter(i => i.done).reduce((s, i) => s + (i.cost * i.qty), 0));
+            let plannedRem = fmt(sal - plannedSpent);
+            let actualRem = fmt(sal - actualSpent);
+
+            let col = document.createElement('div');
+            col.className = 'month-col';
+            col.ondblclick = () => openMonthPage(month);
+            col.ondragover = (e) => e.preventDefault();
+            col.ondrop = (e) => dropToMonth(e, month);
+
+            col.innerHTML = `
+                <div class="month-header">
+                    <strong style="font-size: 1.2em;">${month}</strong>
+                    <button onclick="openMonthPage('${month}'); event.stopPropagation();">Edit / Add</button>
+                </div>
+                <div class="summary-top">Planned: ${sal} - ${plannedSpent} = <strong class="${plannedRem >= 0 ? 'pos' : 'neg'}">${plannedRem}₾</strong></div>
+                <div class="items-container" id="col-${month}">
+                    ${mData.items.map(item => `
+                        <div class="dash-item ${item.done ? 'done' : ''}" style="border-color: ${item.color}" 
+                             draggable="true" ondragstart="dragToMonthStart(event, '${item.id}', '${month}'); event.stopPropagation();">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span>${item.name} (${fmt(item.cost * item.qty)}₾)</span>
+                                <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleDone('${month}', '${item.id}'); event.stopPropagation();">
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="summary-bottom">Real Remaining: <strong class="${actualRem >= 0 ? 'pos' : 'neg'}">${actualRem}₾</strong></div>
+            `;
+            board.appendChild(col);
+        });
+        autoSave();
+    }
+
+    function renderExtras() {
+        let lt = state.longTerm;
+        let ltPlanned = fmt(lt.items.reduce((s, i) => s + (i.cost * i.qty), 0));
+        let ltFinished = fmt(lt.items.filter(i => i.done).reduce((s, i) => s + (i.cost * i.qty), 0));
+        
+        document.getElementById('longTermBox').innerHTML = `
+            <div class="month-header">
+                <strong style="font-size: 1.2em;">Long Term Plans</strong>
+                <button onclick="openMonthPage('LongTerm'); event.stopPropagation();">Edit / Add</button>
+            </div>
+            <div class="summary-top">Total Planned Costs: <strong>${ltPlanned}₾</strong></div>
+            <div class="items-container" ondragover="event.preventDefault()" ondrop="dropToMonth(event, 'LongTerm')">
+                ${lt.items.map(item => `
+                    <div class="dash-item ${item.done ? 'done' : ''}" style="border-color: ${item.color}" 
+                         draggable="true" ondragstart="dragToMonthStart(event, '${item.id}', 'LongTerm'); event.stopPropagation();">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>${item.name} (${fmt(item.cost * item.qty)}₾)</span>
+                            <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleDone('LongTerm', '${item.id}'); event.stopPropagation();">
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="summary-bottom">Finished (Paid) Costs: <strong class="pos">${ltFinished}₾</strong></div>
+        `;
+
+        document.getElementById('piggyBox').innerHTML = `
+            <div class="month-header" style="border-bottom: 1px dashed var(--border);">
+                <strong style="font-size: 1.2em;">Personal Piggy Banks</strong>
+            </div>
+            <div style="padding:15px; display:flex; flex-direction:column; gap:10px; flex-grow:1; overflow-y:auto;">
+                ${state.piggyBanks.map(p => `
+                    <div style="background:#222; padding:12px; border-radius:6px; border-left:6px solid ${p.color}; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                        ${p.isEditing ? `
+                            <input type="text" id="piggyName-${p.id}" value="${p.name}" style="flex-grow:1; min-width: 120px;">
+                            <input type="number" step="any" id="piggyPlan-${p.id}" value="${p.monthlyPlan || ''}" placeholder="Plan/mo ₾" style="width:100px;">
+                            <button onclick="savePiggy('${p.id}')">Save</button>
+                        ` : `
+                            <div style="flex-grow:1;">
+                                <strong style="font-size:1.1em;">${p.name}</strong>
+                                ${p.monthlyPlan ? `<div style="font-size:0.85em; color:#aaa;">Plan: ${p.monthlyPlan}₾ / mo</div>` : ''}
+                            </div>
+                            <div style="font-size:1.3em; font-weight:bold; color:var(--accent); min-width:80px; text-align:right;">${fmt(p.balance)}₾</div>
+                            <div style="display:flex; gap:5px; align-items:center;">
+                                <input type="number" step="any" id="piggyVal-${p.id}" placeholder="₾" style="width:70px;">
+                                <button onclick="updatePiggy('${p.id}', 1)">+</button>
+                                <button class="btn-danger" onclick="updatePiggy('${p.id}', -1)">-</button>
+                                <button class="btn-secondary" style="margin-left:10px;" onclick="togglePiggyEdit('${p.id}')">✏️</button>
+                                <button class="btn-danger" onclick="deletePiggy('${p.id}')">X</button>
+                            </div>
+                        `}
+                    </div>
+                `).join('')}
+                <div style="margin-top:auto; border-top:1px dashed var(--border); padding-top:15px; display:flex; gap:10px;">
+                    <input type="text" id="newPiggyName" placeholder="New Piggy Bank Name" style="flex-grow:1;">
+                    <button onclick="addPiggy()">Create Vault</button>
+                </div>
+            </div>
+        `;
+    }
+
+    // --- PIGGY BANK LOGIC ---
+    function addPiggy() { let n = document.getElementById('newPiggyName').value; if(n){ state.piggyBanks.push({ id: Date.now().toString(), name: n, balance: 0, monthlyPlan: null, color: selectedColor, isEditing: false }); renderExtras(); autoSave(); } }
+    function togglePiggyEdit(id) { state.piggyBanks.find(p => p.id === id).isEditing = true; renderExtras(); }
+    function savePiggy(id) { let b = state.piggyBanks.find(p => p.id === id); b.name = document.getElementById(`piggyName-${id}`).value; let pv = document.getElementById(`piggyPlan-${id}`).value; b.monthlyPlan = pv !== "" ? parseFloat(pv) : null; b.isEditing = false; renderExtras(); autoSave(); }
+    function updatePiggy(id, mult) { let amt = parseFloat(document.getElementById(`piggyVal-${id}`).value) || 0; let b = state.piggyBanks.find(p => p.id === id); if(b && amt > 0) { b.balance = fmt(b.balance + (amt * mult)); renderExtras(); autoSave(); } }
+    function deletePiggy(id) { if(confirm("Delete this Piggy Bank?")) { state.piggyBanks = state.piggyBanks.filter(p => p.id !== id); renderExtras(); autoSave(); } }
+
+    // --- DEDICATED MONTH PAGE LOGIC ---
+    function getActiveItemsArray() { return activeMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][activeMonth].items; }
+
+    function openMonthPage(month) {
+        activeMonth = month;
+        document.getElementById('dashboardView').style.display = 'none';
+        document.getElementById('monthView').style.display = 'flex';
+        
+        if (month === 'LongTerm') {
+            document.getElementById('pageMonthTitle').innerText = "Long Term Plans";
+            document.getElementById('salaryOverrideContainer').style.display = 'none';
+        } else {
+            document.getElementById('pageMonthTitle').innerText = `${month} ${currentYear} Planning`;
+            document.getElementById('salaryOverrideContainer').style.display = 'block';
+            document.getElementById('pageSalary').value = state.years[currentYear][month].salary || '';
+        }
+        renderPageItems();
+    }
+
+    function closeMonthPage() {
+        activeMonth = null;
+        document.getElementById('monthView').style.display = 'none';
+        document.getElementById('dashboardView').style.display = 'flex';
+        renderBoard();
+        renderExtras();
+    }
+
+    function setMonthSalary(val) { if(activeMonth !== 'LongTerm') { state.years[currentYear][activeMonth].salary = val === "" ? null : parseFloat(val); renderPageItems(); autoSave(); } }
+
+    // Auto-tag feature
+    function checkAutoTag(val) {
+        if(!val) return;
+        let firstWord = val.trim().split(' ')[0].toLowerCase();
+        let match = state.tags.find(t => t.toLowerCase() === firstWord);
+        if(match) document.getElementById('itemTag').value = match;
+    }
+
+    function addItem() {
+        let nameInput = document.getElementById('itemName');
+        let costInput = document.getElementById('itemCost');
+        let qtyInput = document.getElementById('itemQty');
+        
+        if(!nameInput.value) return;
+        
+        let item = {
+            id: Date.now().toString(), name: nameInput.value,
+            cost: parseFloat(costInput.value) || 0, qty: parseFloat(qtyInput.value) || 1,
+            tag: document.getElementById('itemTag').value, color: selectedColor, done: false, isEditing: false
+        };
+        
+        getActiveItemsArray().push(item);
+        nameInput.value = ''; costInput.value = ''; qtyInput.value = '1';
+        renderPageItems();
+        autoSave();
+    }
+
+    function renderPageItems() {
+        if(!activeMonth) return;
+        let arr = getActiveItemsArray();
+        let items = [...arr];
+        let sortType = document.getElementById('pageSort').value;
+        
+        if (sortType === 'costDesc') items.sort((a,b) => (b.cost*b.qty) - (a.cost*a.qty));
+        if (sortType === 'costAsc') items.sort((a,b) => (a.cost*a.qty) - (b.cost*b.qty));
+        if (sortType === 'tag') items.sort((a,b) => a.tag.localeCompare(b.tag));
+
+        let plannedSpent = fmt(arr.reduce((s, i) => s + (i.cost * i.qty), 0));
+        let actualSpent = fmt(arr.filter(i => i.done).reduce((s, i) => s + (i.cost * i.qty), 0));
+
+        if (activeMonth === 'LongTerm') {
+            document.getElementById('pageSummaryBar').innerHTML = `<span>Total Planned Costs: <strong>${plannedSpent}₾</strong></span><span>Finished (Paid): <strong class="pos">${actualSpent}₾</strong></span>`;
+        } else {
+            let sal = state.years[currentYear][activeMonth].salary !== null ? state.years[currentYear][activeMonth].salary : state.globalSalary;
+            let plannedRem = fmt(sal - plannedSpent); let actualRem = fmt(sal - actualSpent);
+            document.getElementById('pageSummaryBar').innerHTML = `<span>Planned: ${sal} - ${plannedSpent} = <strong class="${plannedRem >= 0 ? 'pos' : 'neg'}">${plannedRem}₾</strong></span><span>Real Remaining: <strong class="${actualRem >= 0 ? 'pos' : 'neg'}">${actualRem}₾</strong></span>`;
+        }
+
+        let container = document.getElementById('pageItemsContainer');
+        container.className = 'page-content ' + pageLayout;
+        
+        container.innerHTML = items.map(item => {
+            if (item.isEditing) {
+                return `
+                <div class="page-item-card" style="border-color: ${item.color}; display:flex; flex-direction:column; gap:8px; cursor:default;">
+                    <input type="text" id="editName-${item.id}" value="${item.name}">
+                    <div style="display:flex; gap:10px;">
+                        <input type="number" step="any" id="editCost-${item.id}" value="${item.cost}" style="width:90px;" placeholder="Cost ₾">
+                        <input type="number" step="any" id="editQty-${item.id}" value="${item.qty}" style="width:70px;" placeholder="Qty">
+                    </div>
+                    <select id="editTag-${item.id}">${state.tags.map(t => `<option value="${t}" ${t===item.tag?'selected':''}>${t}</option>`).join('')}</select>
+                    <div style="display:flex; gap:10px; margin-top:5px;">
+                        <button onclick="saveEditItem('${item.id}')">Save</button>
+                        <button class="btn-secondary" onclick="toggleEditItem('${item.id}')">Cancel</button>
+                    </div>
+                </div>`;
+            } else {
+                return `
+                <div class="page-item-card ${item.done ? 'done' : ''}" style="border-color: ${item.color}"
+                     draggable="true" ondragstart="pageItemDragStart(event, '${item.id}')" 
+                     ondragover="event.preventDefault()" ondrop="pageItemDrop(event, '${item.id}')">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <strong style="font-size: 1.2em;">${item.name}</strong>
+                        <div>
+                            <button class="btn-secondary" style="padding: 4px 8px;" onclick="toggleEditItem('${item.id}')">✏️</button>
+                            <button class="btn-danger" style="padding: 4px 8px;" onclick="deleteItem('${item.id}')">X</button>
+                        </div>
+                    </div>
+                    <div style="font-size: 1.1em; margin-bottom: 10px;">
+                        ${item.qty}x ${fmt(item.cost)}₾ = <b style="font-size: 1.2em;">${fmt(item.qty * item.cost)}₾</b>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="tag-badge">${item.tag}</span>
+                        <label style="cursor:pointer;"><input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleDone('${activeMonth}', '${item.id}')"> Mark Done</label>
+                    </div>
+                </div>`;
+            }
+        }).join('');
+    }
+
+    // Edit Item functions
+    function toggleEditItem(id) {
+        let item = getActiveItemsArray().find(i => i.id === id);
+        if(item) { item.isEditing = !item.isEditing; renderPageItems(); }
+    }
+    function saveEditItem(id) {
+        let item = getActiveItemsArray().find(i => i.id === id);
+        if(item) {
+            item.name = document.getElementById(`editName-${id}`).value;
+            item.cost = parseFloat(document.getElementById(`editCost-${id}`).value) || 0;
+            item.qty = parseFloat(document.getElementById(`editQty-${id}`).value) || 1;
+            item.tag = document.getElementById(`editTag-${id}`).value;
+            item.isEditing = false;
+            renderPageItems();
+            autoSave();
+        }
+    }
+
+    function deleteItem(id) { let arr = getActiveItemsArray(); arr.splice(arr.findIndex(i => i.id === id), 1); renderPageItems(); autoSave(); }
+    function toggleDone(targetMonth, id) { let arr = targetMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][targetMonth].items; let item = arr.find(i => i.id === id); if (item) item.done = !item.done; if(activeMonth === targetMonth) renderPageItems(); else { renderBoard(); renderExtras(); } autoSave(); }
+
+    // --- DRAG & DROP LOGIC ---
+    function dragToMonthStart(ev, id, sourceMonth) { ev.dataTransfer.setData("id", id); ev.dataTransfer.setData("sourceMonth", sourceMonth); }
+    function dropToMonth(ev, targetMonth) { let id = ev.dataTransfer.getData("id"); let sourceMonth = ev.dataTransfer.getData("sourceMonth"); if (sourceMonth !== targetMonth && sourceMonth) { let sArr = sourceMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][sourceMonth].items; let tArr = targetMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][targetMonth].items; tArr.push(sArr.splice(sArr.findIndex(i => i.id === id), 1)[0]); renderBoard(); renderExtras(); } }
+    function pageItemDragStart(ev, id) { draggedPageItemId = id; }
+    function pageItemDrop(ev, targetId) { ev.preventDefault(); if (draggedPageItemId === targetId || !draggedPageItemId) return; let items = getActiveItemsArray(); let dIdx = items.findIndex(i => i.id === draggedPageItemId); let tIdx = items.findIndex(i => i.id === targetId); items.splice(tIdx, 0, items.splice(dIdx, 1)[0]); draggedPageItemId = null; document.getElementById('pageSort').value = 'none'; renderPageItems(); autoSave(); }
+
+    // --- TAGS, COLORS, ANALYTICS ---
+    function openTagsModal() { document.getElementById('tagsModal').style.display = 'flex'; renderTags(); }
+    function renderTags() { document.getElementById('tagList').innerHTML = state.tags.map((t, i) => `<li style="margin-bottom: 8px; display:flex; justify-content:space-between; background:#222; padding:8px 12px; border-radius:4px;">${t} <button class="btn-danger" style="padding: 2px 6px;" onclick="removeTag(${i})">Del</button></li>`).join(''); updateTagSelects(); }
+    function addTag() { let t = document.getElementById('newTag').value; if(t && !state.tags.includes(t)) { state.tags.push(t); document.getElementById('newTag').value = ''; renderTags(); autoSave(); } }
+    function removeTag(idx) { state.tags.splice(idx, 1); renderTags(); autoSave(); }
+    function updateTagSelects() { document.getElementById('itemTag').innerHTML = state.tags.map(t => `<option value="${t}">${t}</option>`).join(''); }
+
+    function initColorPicker() { document.getElementById('colorPicker').innerHTML = presetColors.map(c => `<div class="color-swatch" style="background:${c}" onclick="selectColor(this, '${c}')"></div>`).join(''); selectColor(document.getElementById('colorPicker').firstElementChild, presetColors[0]); }
+    function selectColor(elem, color) { document.querySelectorAll('.color-swatch').forEach(e => e.classList.remove('selected')); if(elem) elem.classList.add('selected'); selectedColor = color; document.getElementById('customColor').value = color; }
+    function selectCustomColor(color) { document.querySelectorAll('.color-swatch').forEach(e => e.classList.remove('selected')); selectedColor = color; }
+
+    function openAnalyticsModal() {
+        document.getElementById('analyticsModal').style.display = 'flex';
+        document.getElementById('analyticsTitle').innerText = `${currentYear} Analytics`;
+        
+        let totals = {};
+        state.tags.forEach(t => totals[t] = 0);
+        
+        let grandTotal = 0;
+        months.forEach(m => {
+            state.years[currentYear][m].items.forEach(item => {
+                let cost = item.cost * item.qty;
+                if(!totals[item.tag]) totals[item.tag] = 0;
+                totals[item.tag] += cost;
+                grandTotal += cost;
+            });
+        });
+        
+        let html = `<div style="font-size:1.3em; margin-bottom:10px; border-bottom:1px dashed var(--border); padding-bottom:10px;">Total Planned Spending: <strong>${fmt(grandTotal)}₾</strong></div>`;
+        
+        if(grandTotal === 0) { html += `<div>No data for this year yet.</div>`; } 
+        else {
+            Object.keys(totals).sort((a,b)=>totals[b]-totals[a]).forEach(tag => {
+                let val = totals[tag];
+                if(val > 0) {
+                    let pct = Math.round((val / grandTotal) * 100);
+                    html += `
+                    <div style="margin-bottom:15px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <strong>${tag}</strong>
+                            <span>${fmt(val)}₾ (${pct}%)</span>
+                        </div>
+                        <div style="background:#222; width:100%; height:10px; border-radius:5px; overflow:hidden;">
+                            <div style="background:var(--accent); width:${pct}%; height:100%;"></div>
+                        </div>
+                    </div>`;
+                }
+            });
+        }
+        document.getElementById('analyticsContent').innerHTML = html;
+    }
+
+    // --- I/O ---
+    function autoSave() { if (document.getElementById('autosave').checked) { localStorage.setItem('financeDataV7', JSON.stringify(state)); let d = new Date(); document.getElementById('save-status').innerText = `Autosaved at ${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`; } }
+    function exportJSON() { const dl = document.createElement('a'); dl.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2))); dl.setAttribute("download", `planner_backup_${currentYear}.json`); dl.click(); }
+    function importJSON(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { try { state = JSON.parse(e.target.result); if (!state.longTerm) state.longTerm = { items: [] }; if (!state.piggyBanks) state.piggyBanks = []; if(state.notes===undefined) state.notes=""; currentYear = parseInt(Object.keys(state.years)[0]) || new Date().getFullYear(); autoSave(); initUI(); if(activeMonth) closeMonthPage(); } catch(err) { alert("Invalid JSON file"); } }; reader.readAsText(file); event.target.value = ''; }
+
+    init();
+</script>
+</body>
+</html>
