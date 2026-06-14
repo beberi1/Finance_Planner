@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Planner Pro V11</title>
+    <title>Finance Planner Pro V12</title>
     <style>
         :root { 
             --bg: #1e1e1e; --panel: #2d2d2d; --card: #222222; 
@@ -16,6 +16,14 @@
         [data-theme="ocean"] { 
             --bg: #0f172a; --panel: #1e293b; --card: #0f172a; 
             --text: #f8fafc; --accent: #0ea5e9; --border: #334155; 
+        }
+        [data-theme="sunset"] { 
+            --bg: #2a1610; --panel: #3d2218; --card: #311c14; 
+            --text: #fde68a; --accent: #f97316; --border: #7c2d12; 
+        }
+        [data-theme="nature"] { 
+            --bg: #f0f4f0; --panel: #ffffff; --card: #f8faf8; 
+            --text: #1b4332; --accent: #2d6a4f; --border: #b7e4c7; 
         }
 
         body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: background 0.3s, color 0.3s; }
@@ -95,6 +103,7 @@
 </head>
 <body data-theme="dark">
 
+<!-- DASHBOARD VIEW -->
 <div id="dashboardView">
     <header>
         <div style="display:flex; align-items:center; gap: 10px; font-size: 1.2em;">
@@ -111,16 +120,18 @@
             <option value="dark">🌙 Dark Theme</option>
             <option value="light">☀️ Light Theme</option>
             <option value="ocean">🌊 Ocean Theme</option>
+            <option value="sunset">🌇 Sunset Theme</option>
+            <option value="nature">🌿 Nature Theme</option>
         </select>
 
-        <button id="boardLayoutBtn" class="btn-secondary" onclick="toggleBoardLayout()">Layout: Horizontal</button>
+        <button id="boardLayoutBtn" class="btn-secondary" onclick="toggleBoardLayout()">Layout: Grid</button>
         
-        <label id="gridScrollLabel" style="display:none; cursor:pointer;">
+        <label id="gridScrollLabel" style="display:inline-flex; cursor:pointer;">
             <input type="checkbox" id="gridScrollCb" onchange="renderBoard()"> Scroll Grid
         </label>
         
         <button class="btn-secondary" onclick="openTagsModal()">Tags</button>
-        <button class="btn-secondary" onclick="openAnalyticsModal()">📊 Analytics</button>
+        <button class="btn-secondary" onclick="openAnalyticsPage()">📊 Analytics</button>
         
         <div style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
             <span id="save-status"></span>
@@ -133,10 +144,10 @@
     </header>
     
     <div id="dashScrollWrapper">
-        <div id="board" class="board-horizontal"></div>
+        <div id="board" class="board-grid"></div>
         
         <div id="bottomSections">
-            <div class="month-col special-box" id="longTermBox" ondblclick="openMonthPage('LongTerm')"></div>
+            <div class="month-col special-box" id="longTermBox" onclick="openMonthPage('LongTerm')"></div>
             <div class="special-box" id="piggyBox"></div>
             <div class="special-box" style="padding: 15px; display:flex; flex-direction:column;">
                 <div style="font-size: 1.2em; font-weight: bold; border-bottom: 1px dashed var(--border); padding-bottom: 10px; margin-bottom: 10px;">Quick Notes</div>
@@ -146,6 +157,7 @@
     </div>
 </div>
 
+<!-- DEDICATED MONTH PAGE VIEW -->
 <div id="monthView">
     <div class="page-header">
         <div style="display: flex; align-items: center; gap: 20px;">
@@ -167,12 +179,12 @@
                     <option value="tag">Group by Tag</option>
                 </select>
             </div>
-            <button id="pageLayoutBtn" class="btn-secondary" onclick="togglePageLayout()">Layout: Vertical</button>
+            <button id="pageLayoutBtn" class="btn-secondary" onclick="togglePageLayout()">Layout: Grid</button>
         </div>
     </div>
     
     <div id="pageSummaryBar"></div>
-    <div class="page-content" id="pageItemsContainer" class="view-vertical"></div>
+    <div class="page-content" id="pageItemsContainer" class="view-grid"></div>
     
     <div class="page-footer">
         <div style="font-size: 1.2em; font-weight: bold;">Add New Entry</div>
@@ -199,6 +211,54 @@
     </div>
 </div>
 
+<!-- ANALYTICS TAB VIEW -->
+<div id="analyticsView" style="display: none; flex-direction: column; flex-grow: 1; overflow: hidden;">
+    <div class="page-header">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <button class="btn-secondary" onclick="closeAnalyticsPage()">◀ Back (Esc)</button>
+            <h2 style="margin: 0;">Analytics Dashboard</h2>
+        </div>
+    </div>
+    <div class="page-content" style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <!-- Controls Row 1 -->
+        <div style="display:flex; justify-content:center; align-items:center; gap: 10px; flex-wrap: wrap;">
+            <span>From:</span><select id="aYearFrom" onchange="triggerAnalytics()"></select>
+            <span>To:</span><select id="aYearTo" onchange="triggerAnalytics()"></select>
+            <button class="btn-secondary" onclick="selectAllYearsAnalytics()">All Years</button>
+            <div style="border-left: 1px solid var(--border); margin: 0 10px; height: 30px;"></div>
+            <button class="btn-secondary" onclick="analyticsType='bar'; triggerAnalytics();">Bar Chart</button>
+            <button class="btn-secondary" onclick="analyticsType='pie'; triggerAnalytics();">Pie Chart</button>
+            <button class="btn-secondary" onclick="analyticsType='pyramid'; triggerAnalytics();">Pyramid Chart</button>
+        </div>
+
+        <!-- Controls Row 2 -->
+        <div style="display:flex; justify-content:center; align-items:center; gap: 10px; flex-wrap: wrap;">
+            <span>Status:</span>
+            <select id="analyticsStatus" onchange="triggerAnalytics()">
+                <option value="all">All (Planned + Done)</option>
+                <option value="done">Done (Paid Only)</option>
+                <option value="planned">Planned (Pending Only)</option>
+            </select>
+            <span style="margin-left: 10px;">Group By:</span>
+            <select id="analyticsGroup" onchange="triggerAnalytics()">
+                <option value="tag">Tag Category</option>
+                <option value="color">Visual Color</option>
+            </select>
+        </div>
+        
+        <!-- Tag Filters -->
+        <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
+            <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.8em;" onclick="aActiveTags = [...state.tags, 'Untagged']; triggerAnalytics();">✓ Select All Tags</button>
+            <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.8em;" onclick="aActiveTags = []; triggerAnalytics();">✗ Clear All Tags</button>
+        </div>
+        <div id="analyticsTagsFilter" style="display:flex; flex-wrap:wrap; gap:5px; justify-content:center;"></div>
+        
+        <div id="analyticsContent" style="display:flex; flex-direction:column; gap:10px; background: var(--panel); padding: 20px; border-radius: 8px; border: 1px solid var(--border);"></div>
+    </div>
+</div>
+
+<!-- Tags Modal -->
 <div class="modal-overlay" id="tagsModal">
     <div class="modal">
         <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 1.2em; font-weight:bold;">
@@ -213,47 +273,6 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="analyticsModal">
-    <div class="modal">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 1.2em; font-weight:bold;">
-            <span id="analyticsTitle">Analytics Dashboard</span>
-            <button class="btn-danger" onclick="document.getElementById('analyticsModal').style.display='none'">X</button>
-        </div>
-        
-        <div style="display:flex; justify-content:center; align-items:center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-            <span>From:</span><select id="aYearFrom" onchange="triggerAnalytics()"></select>
-            <span>To:</span><select id="aYearTo" onchange="triggerAnalytics()"></select>
-            <button class="btn-secondary" onclick="selectAllYearsAnalytics()">All Years</button>
-            <div style="border-left: 1px solid var(--border); margin: 0 10px; height: 30px;"></div>
-            <button class="btn-secondary" onclick="analyticsType='bar'; triggerAnalytics();">Bar Chart</button>
-            <button class="btn-secondary" onclick="analyticsType='pie'; triggerAnalytics();">Pie Chart</button>
-            <button class="btn-secondary" onclick="analyticsType='pyramid'; triggerAnalytics();">Pyramid Chart</button>
-        </div>
-
-        <div style="display:flex; justify-content:center; align-items:center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-            <span>Status:</span>
-            <select id="analyticsStatus" onchange="triggerAnalytics()">
-                <option value="all">All (Planned + Done)</option>
-                <option value="done">Done (Paid Only)</option>
-                <option value="planned">Planned (Pending Only)</option>
-            </select>
-            <span style="margin-left: 10px;">Group By:</span>
-            <select id="analyticsGroup" onchange="triggerAnalytics()">
-                <option value="tag">Tag Category</option>
-                <option value="color">Visual Color</option>
-            </select>
-        </div>
-        
-        <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:10px;">
-            <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.8em;" onclick="aActiveTags = [...state.tags, 'Untagged']; triggerAnalytics();">✓ Select All Tags</button>
-            <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.8em;" onclick="aActiveTags = []; triggerAnalytics();">✗ Clear All Tags</button>
-        </div>
-        <div id="analyticsTagsFilter" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom: 20px; justify-content:center;"></div>
-        
-        <div id="analyticsContent" style="display:flex; flex-direction:column; gap:10px;"></div>
-    </div>
-</div>
-
 <script>
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const presetColors = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#9e9e9e", "#607d8b", "#ffffff"];
@@ -263,8 +282,11 @@
     let currentYear = new Date().getFullYear();
     let activeMonth = null;
     let selectedColor = "#4caf50";
-    let boardLayout = 'horizontal';
-    let pageLayout = 'view-vertical';
+    
+    // Default layouts updated to Grid
+    let boardLayout = 'grid';
+    let pageLayout = 'view-grid';
+    
     let fileHandle = null; 
     let analyticsType = 'bar';
     let draggedDashItemId = null; let draggedDashSourceMonth = null; let draggedPageItemId = null; let draggedPiggyId = null;
@@ -288,10 +310,9 @@
 
     document.addEventListener('keydown', function(event) {
         if (event.key === "Escape") {
-            let aModal = document.getElementById('analyticsModal');
             let tModal = document.getElementById('tagsModal');
-            if (aModal.style.display === 'flex') aModal.style.display = 'none';
-            else if (tModal.style.display === 'flex') tModal.style.display = 'none';
+            if (tModal.style.display === 'flex') tModal.style.display = 'none';
+            else if (document.getElementById('analyticsView').style.display === 'flex') closeAnalyticsPage();
             else if (activeMonth !== null) closeMonthPage();
         }
     });
@@ -299,7 +320,7 @@
     function checkEnter(event) { if (event.key === "Enter") addItem(); }
 
     function init() {
-        let saved = localStorage.getItem('financeDataV10'); // Keeping v10 key for compatibility, or you can increment to v11 internally
+        let saved = localStorage.getItem('financeDataV10'); 
         if (saved) { state = { ...state, ...JSON.parse(saved) }; }
         if (!state.years[currentYear]) generateYear(currentYear);
         
@@ -327,6 +348,11 @@
         document.getElementById('globalSalary').value = state.years[currentYear].yearlySalary;
         document.getElementById('yearDisplay').innerText = currentYear;
         document.getElementById('quickNotes').value = state.notes;
+        
+        // Setup initial layouts
+        document.getElementById('boardLayoutBtn').innerText = boardLayout === 'horizontal' ? 'Layout: Horizontal' : 'Layout: Grid';
+        document.getElementById('pageLayoutBtn').innerText = pageLayout === 'view-vertical' ? 'Layout: Vertical' : 'Layout: Grid';
+
         initColorPicker();
         updateTagSelects();
         renderBoard();
@@ -365,7 +391,10 @@
             
             let plannedRem = fmt(sal + plannedIncome - plannedSpent); let actualRem = fmt(sal + actualIncome - actualSpent);
             let col = document.createElement('div'); col.className = 'month-col';
-            col.ondblclick = () => openMonthPage(month); col.ondragover = (e) => e.preventDefault(); col.ondrop = (e) => dropToMonth(e, month);
+            
+            // Single click setup for column (opening Month Page)
+            col.onclick = () => openMonthPage(month); 
+            col.ondragover = (e) => e.preventDefault(); col.ondrop = (e) => dropToMonth(e, month);
             let mathString = plannedIncome > 0 ? `Budget: ${sal} + ${plannedIncome} - ${plannedSpent} = <strong class="${plannedRem >= 0 ? 'pos' : 'neg'}">${plannedRem}₾</strong>` : `Planned: ${sal} - ${plannedSpent} = <strong class="${plannedRem >= 0 ? 'pos' : 'neg'}">${plannedRem}₾</strong>`;
 
             col.innerHTML = `
@@ -374,6 +403,7 @@
                 <div class="items-container" id="col-${month}">
                     ${mData.items.map(item => `
                         <div class="dash-item ${item.done ? 'done' : ''}" style="border-color: ${item.color}" 
+                             onclick="event.stopPropagation();"
                              draggable="true" ondragstart="dashDragStart(event, '${item.id}', '${month}'); event.stopPropagation();"
                              ondragover="event.preventDefault();" ondrop="dashDropOnItem(event, '${item.id}', '${month}');">
                             <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -394,12 +424,13 @@
         let ltPlanned = fmt(expenses.reduce((s, i) => s + (i.cost * i.qty), 0)); let ltFinished = fmt(expenses.filter(i => i.done).reduce((s, i) => s + (i.cost * i.qty), 0));
         let incText = incomes.length > 0 ? ` (+${fmt(incomes.reduce((s,i)=>s+(i.cost*i.qty),0))} Inc)` : '';
         
+        document.getElementById('longTermBox').onclick = () => openMonthPage('LongTerm');
         document.getElementById('longTermBox').innerHTML = `
             <div class="month-header"><strong style="font-size: 1.2em;">Long Term Plans</strong><button onclick="openMonthPage('LongTerm'); event.stopPropagation();">Edit / Add</button></div>
             <div class="summary-top">Total Planned Costs: <strong>${ltPlanned}₾</strong> ${incText}</div>
             <div class="items-container" ondragover="event.preventDefault()" ondrop="dropToMonth(event, 'LongTerm')">
                 ${lt.items.map(item => `
-                    <div class="dash-item ${item.done ? 'done' : ''}" style="border-color: ${item.color}" draggable="true" ondragstart="dashDragStart(event, '${item.id}', 'LongTerm'); event.stopPropagation();" ondragover="event.preventDefault()" ondrop="dashDropOnItem(event, '${item.id}', 'LongTerm');">
+                    <div class="dash-item ${item.done ? 'done' : ''}" style="border-color: ${item.color}" onclick="event.stopPropagation();" draggable="true" ondragstart="dashDragStart(event, '${item.id}', 'LongTerm'); event.stopPropagation();" ondragover="event.preventDefault()" ondrop="dashDropOnItem(event, '${item.id}', 'LongTerm');">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span style="color: ${item.isIncome ? 'var(--accent)' : 'inherit'};">${item.isIncome ? '➕' : ''} ${item.name} (${fmt(item.cost * item.qty)}₾)</span>
                             <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleDone('LongTerm', '${item.id}'); event.stopPropagation();">
@@ -591,7 +622,7 @@
     function pageItemDragStart(ev, id) { draggedPageItemId = id; }
     function pageItemDrop(ev, targetId) { ev.preventDefault(); if (draggedPageItemId === targetId || !draggedPageItemId) return; let items = getActiveItemsArray(); let dIdx = items.findIndex(i => i.id === draggedPageItemId); let tIdx = items.findIndex(i => i.id === targetId); items.splice(tIdx, 0, items.splice(dIdx, 1)[0]); draggedPageItemId = null; document.getElementById('pageSort').value = 'none'; renderPageItems(); autoSave(); }
 
-    // --- TAGS, COLORS, ANALYTICS ---
+    // --- TAGS & COLORS ---
     function openTagsModal() { document.getElementById('tagsModal').style.display = 'flex'; renderTags(); }
     function renderTags() { document.getElementById('tagList').innerHTML = state.tags.map((t, i) => `<li style="margin-bottom: 8px; display:flex; justify-content:space-between; background:var(--card); padding:8px 12px; border-radius:4px; border:1px solid var(--border);">${t} <button class="btn-danger" style="padding: 2px 6px;" onclick="removeTag(${i})">Del</button></li>`).join(''); updateTagSelects(); }
     function addTag() { let t = document.getElementById('newTag').value; if(t && !state.tags.includes(t)) { state.tags.push(t); document.getElementById('newTag').value = ''; renderTags(); autoSave(); } }
@@ -602,11 +633,20 @@
     function selectColor(elem, color) { document.querySelectorAll('.color-swatch').forEach(e => e.classList.remove('selected')); if(elem) elem.classList.add('selected'); selectedColor = color; document.getElementById('customColor').value = color; }
     function selectCustomColor(color) { document.querySelectorAll('.color-swatch').forEach(e => e.classList.remove('selected')); selectedColor = color; }
 
-    function openAnalyticsModal() { 
-        document.getElementById('analyticsModal').style.display = 'flex'; 
+    // --- ANALYTICS TAB PAGE LOGIC ---
+    function openAnalyticsPage() { 
+        document.getElementById('dashboardView').style.display = 'none'; 
+        document.getElementById('analyticsView').style.display = 'flex'; 
         aYearStart = currentYear; aYearEnd = currentYear; 
         aActiveTags = [...state.tags, "Untagged"];
         renderAnalyticsUI();
+    }
+    
+    function closeAnalyticsPage() {
+        document.getElementById('analyticsView').style.display = 'none';
+        document.getElementById('dashboardView').style.display = 'flex';
+        renderBoard();
+        renderExtras();
     }
     
     function toggleAnalyticsTag(t) { if(aActiveTags.includes(t)) aActiveTags = aActiveTags.filter(x => x!==t); else aActiveTags.push(t); triggerAnalytics(); }
@@ -651,7 +691,6 @@
                 state.years[y][m].items.forEach(item => {
                     let cost = item.cost * item.qty;
                     
-                    // Filter logic
                     if (statusFilter === 'done' && !item.done) return;
                     if (statusFilter === 'planned' && item.done) return;
                     if(item.isIncome) { totalIncome += cost; return; } 
