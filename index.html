@@ -579,7 +579,7 @@
             } else {
                 return `
                 <div class="page-item-card ${item.done ? 'done' : ''}" style="border-color: ${item.color}"
-                     ondblclick="toggleEditItem('${item.id}')" draggable="true" ondragstart="pageItemDragStart(event, '${item.id}')" 
+                     onclick="toggleEditItem('${item.id}')" draggable="true" ondragstart="pageItemDragStart(event, '${item.id}')" 
                      ondragover="event.preventDefault()" ondrop="pageItemDrop(event, '${item.id}')">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                         <strong style="font-size: 1.2em; color: ${item.isIncome ? 'var(--accent)' : 'inherit'}">${item.isIncome ? '➕' : ''} ${item.name}</strong>
