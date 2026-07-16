@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Planner Pro V18</title>
+    <title>Finance Planner Pro V19</title>
     <style>
         :root { 
             --bg: #1e1e1e; --panel: #2d2d2d; --card: #222222; 
@@ -77,8 +77,8 @@
         
         /* --- DEDICATED MONTH PAGE VIEW --- */
         #monthView { display: none; flex-direction: column; flex-grow: 1; overflow: hidden; }
-        .page-header { background: var(--card); padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-        #pageSummaryBar { background: var(--panel); padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 1.1em; flex-shrink: 0; }
+        .page-header { background: var(--card); padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; flex-wrap: wrap; gap: 10px; }
+        #pageSummaryBar { background: var(--panel); padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 1.1em; flex-shrink: 0; flex-wrap: wrap; gap: 5px; }
         
         .page-content { padding: 20px; flex-grow: 1; overflow-y: auto; }
         .page-footer { background: var(--panel); border-top: 2px solid var(--border); padding: 25px; flex-shrink: 0; display: flex; flex-direction: column; gap: 15px; }
@@ -118,6 +118,31 @@
         .merge-badge { font-size: 0.8em; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: white; margin-right: 10px;}
         .btn-merge-choice { flex: 1; padding: 8px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; text-align: center; font-weight: bold; opacity: 0.4; background: var(--bg); color: var(--text); }
         .btn-merge-choice.active { opacity: 1; border-color: var(--accent); background: var(--panel); box-shadow: inset 0 0 0 2px var(--accent); }
+
+        /* --- MOBILE RESPONSIVENESS (Requirement 4) --- */
+        @media (max-width: 768px) {
+            header { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px; }
+            header > div { width: 100%; display: flex; justify-content: space-between; margin: 0 !important; border: none !important; padding: 0 !important; flex-wrap: wrap; }
+            header button { flex-grow: 1; }
+            
+            #board.board-grid { grid-template-columns: 1fr; }
+            .month-col { min-width: 100%; }
+            #bottomSections { grid-template-columns: 1fr; }
+            
+            .view-grid { grid-template-columns: 1fr; }
+            
+            .modal { min-width: 90%; max-width: 95%; padding: 15px; }
+            
+            .large-inputs input, .large-inputs select, .large-inputs button { font-size: 1em; padding: 10px; width: 100%; }
+            .large-inputs { flex-direction: column; align-items: stretch; }
+            .large-inputs > div { width: 100%; }
+            
+            .color-grid { grid-template-columns: repeat(5, 1fr); }
+            
+            #newEntryTagsContainer { max-width: 100%; }
+            
+            .page-header > div { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+        }
     </style>
 </head>
 <body data-theme="dark">
@@ -214,7 +239,7 @@
 
             <input type="text" class="num-input" id="itemQty" placeholder="Qty" value="1" style="width:70px;" onkeydown="checkEnter(event)">
             
-            <div id="newEntryTagsContainer" style="display:flex; gap:5px; flex-wrap:wrap; max-width:250px;"></div>
+            <div id="newEntryTagsContainer" style="display:flex; gap:5px; flex-wrap:wrap; max-width:250px; max-height: 90px; overflow-y: auto; padding-right: 5px;"></div>
             
             <button onclick="addItem()" style="padding: 12px 30px; margin-left:auto;">Add to List (Enter)</button>
         </div>
@@ -234,7 +259,7 @@
             <button class="btn-secondary" onclick="closeAnalyticsPage()">◀ Back (Esc)</button>
             <h2 style="margin: 0;">Analytics Dashboard</h2>
         </div>
-        <div style="display:flex; gap: 10px;">
+        <div style="display:flex; gap: 10px; flex-wrap: wrap;">
             <button class="btn-secondary" onclick="analyticsType='bar'; triggerAnalytics();">Bar Chart</button>
             <button class="btn-secondary" onclick="analyticsType='pie'; triggerAnalytics();">Pie Chart</button>
             <button class="btn-secondary" onclick="analyticsType='pyramid'; triggerAnalytics();">Pyramid Chart</button>
@@ -284,7 +309,9 @@
             <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.8em;" onclick="aActiveTags = [...state.tags, 'Untagged', 'Base Salary']; triggerAnalytics();">✓ Select All</button>
             <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.8em;" onclick="aActiveTags = []; triggerAnalytics();">✗ Clear All</button>
         </div>
-        <div id="analyticsTagsFilter" style="display:flex; flex-wrap:wrap; gap:5px; justify-content:center; padding-bottom: 5px;"></div>
+        
+        <div id="analyticsTagsFilter" style="display:flex; flex-wrap:wrap; gap:5px; justify-content:center; padding-bottom: 5px; max-height: 120px; overflow-y: auto;"></div>
+        
         <div id="analyticsContent" style="display:flex; flex-direction:column; gap:10px; background: var(--panel); padding: 20px; border-radius: 8px; border: 1px solid var(--border);"></div>
     </div>
 </div>
@@ -311,7 +338,7 @@
             <input type="text" id="newTag" placeholder="New Tag Name" style="flex-grow: 1;" onkeydown="if(event.key==='Enter') addTag()">
             <button onclick="addTag()">Add Tag</button>
         </div>
-        <ul id="tagList" style="list-style: none; padding: 0;"></ul>
+        <ul id="tagList" style="list-style: none; padding: 0; flex-grow: 1; overflow-y: auto; max-height: 40vh;"></ul>
     </div>
 </div>
 
@@ -321,7 +348,7 @@
             <span>⚙️ App Settings</span>
             <button class="btn-danger" onclick="document.getElementById('settingsModal').style.display='none'">X</button>
         </div>
-        <div style="display:flex; flex-direction:column; gap:25px;">
+        <div style="display:flex; flex-direction:column; gap:25px; overflow-y: auto;">
             
             <div style="display:flex; flex-direction:column; gap:8px;">
                 <label style="font-weight:bold; font-size:1.1em; border-bottom:1px solid var(--border); padding-bottom:5px;">Appearance</label>
@@ -389,7 +416,7 @@
         
         <div id="mergeContent" style="display:flex; flex-direction:column; gap:15px; overflow-y:auto; padding-right:10px; flex-grow:1; margin-bottom: 15px;"></div>
         
-        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px solid var(--border); padding-top: 15px; flex-shrink: 0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top: 1px solid var(--border); padding-top: 15px; flex-shrink: 0; flex-wrap: wrap; gap: 10px;">
             <div style="display:flex; gap: 10px;">
                 <button class="btn-secondary" onclick="setAllMergeChoices('local')">Keep All Local</button>
                 <button class="btn-secondary" onclick="setAllMergeChoices('import')">Accept All Imports</button>
@@ -422,6 +449,9 @@
     
     let mergeConflicts = [];
     let mergeImportedData = null;
+
+    // Requirement 1: Added global flag to prevent analytics settings from wiping out on re-entry
+    let analyticsInitialized = false; 
 
     function fmt(num) { return Number(Math.round(num + "e2") + "e-2"); }
     function toGEL(amt, curr) { return curr === 'USD' ? amt * (state.settings.usdRate || 2.7) : amt; }
@@ -971,13 +1001,20 @@
     function selectColor(elem, color) { document.querySelectorAll('#colorPicker .color-swatch').forEach(e => e.classList.remove('selected')); if(elem) elem.classList.add('selected'); selectedColor = color; document.getElementById('customColor').value = color; }
     function selectCustomColor(color) { document.querySelectorAll('#colorPicker .color-swatch').forEach(e => e.classList.remove('selected')); selectedColor = color; }
 
+    // Requirement 1: Update openAnalyticsPage to respect the initial load flag
     function openAnalyticsPage() { 
         document.getElementById('dashboardView').style.display = 'none'; 
         document.getElementById('analyticsView').style.display = 'flex'; 
-        aYearStart = currentYear; aYearEnd = currentYear; 
-        document.getElementById('aUpToCurrent').checked = false;
-        aActiveTags = [...state.tags, "Untagged", "Base Salary"];
-        renderAnalyticsUI(true);
+        
+        if (!analyticsInitialized) {
+            aYearStart = currentYear; aYearEnd = currentYear; 
+            document.getElementById('aUpToCurrent').checked = false;
+            aActiveTags = [...state.tags, "Untagged", "Base Salary"];
+            renderAnalyticsUI(true);
+            analyticsInitialized = true;
+        } else {
+            renderAnalyticsUI(false); 
+        }
     }
     
     function closeAnalyticsPage() {
@@ -1001,6 +1038,7 @@
     
     function triggerAnalytics() { renderAnalyticsUI(false); }
     
+    // Requirement 2: Upgraded math logic inside renderAnalyticsUI
     function renderAnalyticsUI(initSelects = false) {
         let years = Object.keys(state.years).sort();
         let ySelHtml = years.map(y => `<option value="${y}">${y}</option>`).join('');
@@ -1142,7 +1180,7 @@
                 sortedKeys.forEach(key => {
                     let val = totals[key];
                     if(val > 0) {
-                        let pct = Math.round((val / grandTotal) * 100);
+                        let pct = ((val / grandTotal) * 100).toFixed(1);
                         let label = groupBy === 'tag' ? key : (groupBy === 'month' ? key : 'Color Group');
                         html += `<div style="margin-bottom:15px;">
                             <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><strong>${label}</strong><span>${fmt(val)}₾ (${pct}%) | Avg: ${fmt(val/actualMonths)}₾/mo</span></div>
@@ -1156,11 +1194,11 @@
                 sortedKeys.forEach(key => {
                     let val = totals[key];
                     if(val > 0) {
-                        let pct = (val / grandTotal) * 100;
-                        conic.push(`${colors[key]} ${acc}% ${acc + pct}%`);
+                        let pctNum = (val / grandTotal) * 100;
+                        conic.push(`${colors[key]} ${acc}% ${acc + pctNum}%`);
                         let label = groupBy === 'tag' ? key : (groupBy === 'month' ? key : 'Color Group');
-                        legendHtml += `<div><span class="legend-color" style="background:${colors[key]}"></span>${label} (${Math.round(pct)}%)</div>`;
-                        acc += pct;
+                        legendHtml += `<div><span class="legend-color" style="background:${colors[key]}"></span>${label} (${pctNum.toFixed(1)}%)</div>`;
+                        acc += pctNum;
                     }
                 });
                 legendHtml += `</div>`;
@@ -1171,12 +1209,12 @@
                 sortedKeys.forEach(key => {
                     let val = totals[key];
                     if(val > 0) {
-                        let pctOfTotal = (val / grandTotal) * 100;
+                        let pctOfTotal = ((val / grandTotal) * 100).toFixed(1);
                         let pctOfMax = (val / maxVal) * 100;
                         let label = groupBy === 'tag' ? key : (groupBy === 'month' ? key : 'Color Group');
                         pyramidHtml += `
                         <div style="width: ${pctOfMax}%; min-width: fit-content; background: ${colors[key]}; padding: 6px 12px; border-radius: 4px; text-align: center; color: white; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); box-sizing: border-box; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
-                            ${label} <span style="font-size:0.85em; opacity:0.9; margin-left:8px;">${fmt(val)}₾ (${Math.round(pctOfTotal)}%) | Avg: ${fmt(val/actualMonths)}₾/mo</span>
+                            ${label} <span style="font-size:0.85em; opacity:0.9; margin-left:8px;">${fmt(val)}₾ (${pctOfTotal}%) | Avg: ${fmt(val/actualMonths)}₾/mo</span>
                         </div>`;
                     }
                 });
