@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Finance Planner Pro V23</title>
+    <title>Finance Planner Pro V24</title>
     <meta name="description" content="Personal finance planning and budgeting application">
 
     <!-- PWA Meta Tags -->
@@ -125,11 +125,11 @@
         }
 
         button:hover {
-            opacity: 0.8;
+            opacity: 0.85;
         }
 
         button:active {
-            opacity: 0.6;
+            opacity: 0.65;
             transform: scale(0.97);
         }
 
@@ -214,7 +214,52 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 40px;
+            gap: 24px;
+        }
+
+        /* Change #1: Top Statistics Bar */
+        #yearStatsBar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 2px;
+        }
+
+        .stat-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+            min-width: 150px;
+            transition: transform 0.15s, border-color 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: #888;
+        }
+
+        .stat-card .stat-icon {
+            font-size: 1.2em;
+            margin-bottom: 2px;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.72em;
+            color: #aaa;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.35em;
+            font-weight: bold;
         }
 
         #board {
@@ -245,7 +290,7 @@
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: transform 0.1s, border-color 0.2s;
             position: relative;
         }
 
@@ -376,7 +421,7 @@
             min-height: 300px;
         }
 
-        /* --- DEDICATED MONTH PAGE VIEW --- */
+        /* --- DEDICATED MONTH PAGE VIEW (TAG-FIRST) --- */
         #monthView {
             display: none;
             flex-direction: column;
@@ -386,7 +431,7 @@
 
         .page-header {
             background: var(--card);
-            padding: 20px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
@@ -396,13 +441,25 @@
             gap: 10px;
         }
 
+        /* Tag filter row in month view */
+        #monthTagFilterRow {
+            background: var(--card);
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
         #pageSummaryBar {
             background: var(--panel);
             padding: 12px 20px;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            font-size: 1.1em;
+            font-size: 1.05em;
             flex-shrink: 0;
             flex-wrap: wrap;
             gap: 5px;
@@ -412,6 +469,137 @@
             padding: 20px;
             flex-grow: 1;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Tag Section in Month View */
+        .tag-section {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .tag-section:hover {
+            border-color: #666;
+        }
+
+        .tag-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--card);
+            cursor: pointer;
+            user-select: none;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid transparent;
+        }
+
+        .tag-section-header:hover {
+            background: rgba(255,255,255,0.03);
+        }
+
+        .tag-section-header.is-open {
+            border-bottom-color: var(--border);
+        }
+
+        .tag-sec-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tag-sec-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .tag-badge-large {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.95em;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 0.3px;
+        }
+
+        .tag-item-count {
+            font-size: 0.8em;
+            color: #aaa;
+            background: var(--bg);
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .tag-sec-total {
+            font-size: 1.05em;
+            font-weight: bold;
+        }
+
+        .tag-sec-chevron {
+            font-size: 0.85em;
+            color: #aaa;
+            transition: transform 0.25s ease;
+        }
+
+        .tag-section-body {
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tag-section-body.view-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 12px;
+            align-items: start;
+        }
+
+        .tag-section-body.view-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Inline Quick Add inside each tag */
+        .tag-quick-add-row {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: var(--bg);
+            border: 1px dashed var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            flex-wrap: wrap;
+        }
+
+        .tag-quick-add-row input[type="text"] {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .tag-quick-add-row button {
+            padding: 6px 16px;
+            font-size: 0.9em;
+            min-height: 36px;
+        }
+
+        .tag-empty-notice {
+            grid-column: 1 / -1;
+            color: #888;
+            font-size: 0.88em;
+            font-style: italic;
+            padding: 6px 2px;
         }
 
         .page-footer {
@@ -462,24 +650,10 @@
             font-size: 1.1em;
         }
 
-        .view-vertical {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .view-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 10px 15px;
-            align-items: start;
-            align-content: start;
-        }
-
         .page-item-card {
             background: var(--card);
             border-left: 6px solid;
-            padding: 15px;
+            padding: 14px;
             border-radius: 6px;
             border: 1px solid var(--border);
             transition: 0.2s;
@@ -493,17 +667,7 @@
         }
 
         .page-item-card.done {
-            opacity: 0.4;
-        }
-
-        .page-section-title {
-            grid-column: 1 / -1;
-            font-size: 1.2em;
-            font-weight: bold;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 5px;
-            margin-top: 10px;
-            color: var(--text);
+            opacity: 0.45;
         }
 
         .color-grid {
@@ -549,24 +713,251 @@
             max-height: 90vh;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- REWORKED ANALYTICS VIEW --- */
+        #analyticsView {
+            display: none;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .analytics-body {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .analytics-sidebar {
+            width: 310px;
+            min-width: 260px;
+            max-width: 340px;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .analytics-sidebar-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .analytics-sidebar-section-title {
+            font-size: 0.75em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 6px;
+        }
+
+        .chart-type-pills {
+            display: flex;
+            gap: 6px;
+        }
+
+        .chart-pill {
+            flex: 1;
+            min-height: 38px;
+            padding: 6px;
+            font-size: 0.85em;
+            font-weight: bold;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .chart-pill:hover {
+            border-color: var(--accent);
+        }
+
+        .chart-pill.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+        }
+
+        .analytics-main {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .analytics-kpi-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .analytics-kpi-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .analytics-kpi-label {
+            font-size: 0.72em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #aaa;
+            font-weight: bold;
+        }
+
+        .analytics-kpi-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .analytics-chart-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .donut-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 15px auto;
         }
 
         .pie-chart {
-            width: 250px;
-            height: 250px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             border: 2px solid var(--border);
-            margin: 0 auto;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+        }
+
+        .donut-center-cutout {
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            background: var(--panel);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
+            pointer-events: none;
         }
 
         .legend-color {
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
             display: inline-block;
             border-radius: 3px;
             margin-right: 8px;
             vertical-align: middle;
+        }
+
+        /* Piggy Bank savings goal tracker */
+        .piggy-goal-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 8px 10px;
+            margin-top: 6px;
+        }
+
+        .piggy-progress-bar-outer {
+            height: 8px;
+            background: var(--card);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin: 4px 0;
+        }
+
+        .piggy-progress-bar-inner {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Loans Modal & Activity */
+        .modal-tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+        }
+
+        .modal-tab-btn {
+            background: transparent;
+            color: #aaa;
+            border: none;
+            padding: 8px 14px;
+            font-size: 0.95em;
+            cursor: pointer;
+            border-radius: 4px;
+            min-height: 36px;
+        }
+
+        .modal-tab-btn.active {
+            background: var(--accent);
+            color: white;
+            font-weight: bold;
+        }
+
+        .loan-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-left: 6px solid #2196f3;
+            border-radius: 6px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .loan-card.paid {
+            border-left-color: #4caf50;
+            opacity: 0.65;
+        }
+
+        .ledger-entry-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
         }
 
         .adj-btn {
@@ -773,6 +1164,13 @@
                 min-height: 40px;
                 font-size: 16px;
             }
+
+            #yearStatsBar { gap: 8px; }
+            .stat-card { min-width: 120px; padding: 10px 12px; }
+
+            .analytics-body { flex-direction: column; }
+            .analytics-sidebar { width: 100%; max-width: 100%; border-right: none; border-bottom: 1px solid var(--border); max-height: 320px; }
+            .tag-section-body.view-grid { grid-template-columns: 1fr; }
         }
 
         /* Extra small devices */
@@ -796,11 +1194,11 @@
                 gap: 20px;
             }
         }
+
     </style>
 </head>
 
 <body data-theme="dark">
-
     <div id="dashboardView">
         <header>
             <div style="display:flex; align-items:center; gap: 10px; font-size: 1.2em;">
@@ -817,22 +1215,24 @@
             <div style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
                 <span id="save-status"></span>
                 <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
-                <button class="btn-secondary" onclick="document.getElementById('importFile').click()">📥 Import
-                    (Sync)</button>
+                <button class="btn-secondary" onclick="document.getElementById('importFile').click()">📥 Import (Sync)</button>
                 <button class="btn-secondary" onclick="exportJSON()">📤 Export Copy</button>
             </div>
         </header>
 
         <div id="dashScrollWrapper">
+            <!-- Change #1: Year Stats Bar (Top of months, not in navbar) -->
+            <div id="yearStatsBar"></div>
+
             <div id="board" class="board-grid"></div>
 
             <div id="bottomSections">
                 <div class="month-col special-box" id="longTermBox" onclick="openMonthPage('LongTerm')"></div>
                 <div class="special-box" id="piggyBox"></div>
                 <div class="special-box" style="padding: 15px; display:flex; flex-direction:column;">
-                    <div
-                        style="font-size: 1.2em; font-weight: bold; border-bottom: 1px dashed var(--border); padding-bottom: 10px; margin-bottom: 10px;">
-                        Quick Notes</div>
+                    <div style="font-size: 1.2em; font-weight: bold; border-bottom: 1px dashed var(--border); padding-bottom: 10px; margin-bottom: 10px;">
+                        Quick Notes
+                    </div>
                     <textarea id="quickNotes" style="flex-grow: 1; resize: none; background: var(--card);"
                         placeholder="Write global plans, ideas, or reminders here..."
                         oninput="updateNotes(this.value)"></textarea>
@@ -841,6 +1241,7 @@
         </div>
     </div>
 
+    <!-- Month Page View (Tag-First Structure) -->
     <div id="monthView">
         <div class="page-header">
             <div style="display: flex; align-items: center; gap: 20px;">
@@ -848,7 +1249,7 @@
                 <h2 id="pageMonthTitle" style="margin: 0;">Month Name</h2>
             </div>
 
-            <div style="display:flex; gap: 15px; align-items: center;">
+            <div style="display:flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                 <div id="salaryOverrideContainer">
                     <label>Month Override (₾): </label>
                     <input type="text" class="num-input" id="pageSalary" placeholder="Uses year baseline if empty"
@@ -866,8 +1267,15 @@
             </div>
         </div>
 
+        <!-- Change #3 & #7: Tag Filter & Control Row -->
+        <div id="monthTagFilterRow">
+            <input type="text" id="tagFilterSearch" placeholder="🔍 Search tags to filter..." oninput="renderPageItems()" style="max-width:280px;">
+            <button class="btn-secondary" onclick="toggleAllTagSections()" style="padding:6px 14px; font-size:0.85em; min-height:36px;">⇕ Expand / Collapse All</button>
+            <span id="tagFilterCount" style="font-size:0.85em; color:#aaa; margin-left:auto;"></span>
+        </div>
+
         <div id="pageSummaryBar"></div>
-        <div class="page-content" id="pageItemsContainer" class="view-grid"></div>
+        <div class="page-content" id="pageItemsContainer"></div>
 
         <div class="page-footer" id="pageFooterElem">
             <div id="footerResizer" class="resizer-bar"></div>
@@ -881,12 +1289,10 @@
                 <input type="text" id="itemName" placeholder="What is it?" style="flex-grow: 1; min-width: 200px;"
                     oninput="checkAutoTag(this.value)" onkeydown="checkEnter(event)">
 
-                <div
-                    style="display:flex; align-items:center; background:var(--bg); border:1px solid var(--border); border-radius:4px; overflow:hidden;">
-                    <input type="text" class="num-input" id="itemCost" placeholder="Cost"
+                <div style="display:flex; align-items:center; background:var(--bg); border:1px solid var(--border); border-radius:4px; overflow:hidden;">
+                    <input type="text" class="num-input math-input" id="itemCost" placeholder="Cost"
                         style="width:80px; border:none;" onkeydown="checkEnter(event)">
-                    <select id="itemCurrency"
-                        style="width:50px; border:none; background:transparent; font-weight:bold;">
+                    <select id="itemCurrency" style="width:50px; border:none; background:transparent; font-weight:bold;">
                         <option value="GEL">₾</option>
                         <option value="USD">$</option>
                     </select>
@@ -917,87 +1323,125 @@
         </div>
     </div>
 
-    <div id="analyticsView" style="display: none; flex-direction: column; flex-grow: 1; overflow: hidden;">
+    <!-- Change #2: Reworked Analytics Dashboard -->
+    <div id="analyticsView">
         <div class="page-header">
             <div style="display: flex; align-items: center; gap: 20px;">
                 <button class="btn-secondary" onclick="closeAnalyticsPage()">◀ Back (Esc)</button>
-                <h2 style="margin: 0;">Analytics Dashboard</h2>
-            </div>
-            <div style="display:flex; gap: 10px; flex-wrap: wrap;">
-                <button class="btn-secondary" onclick="analyticsType='bar'; triggerAnalytics();">Bar Chart</button>
-                <button class="btn-secondary" onclick="analyticsType='pie'; triggerAnalytics();">Pie Chart</button>
-                <button class="btn-secondary" onclick="analyticsType='pyramid'; triggerAnalytics();">Pyramid
-                    Chart</button>
+                <h2 style="margin: 0;">📊 Analytics & Insights</h2>
             </div>
         </div>
-        <div class="page-content" style="display: flex; flex-direction: column; gap: 20px;">
-            <div style="display:flex; justify-content:center; align-items:center; gap: 10px; flex-wrap: wrap;">
-                <span style="font-weight:bold;">From:</span>
-                <select id="aMonthFrom" onchange="triggerAnalytics()"></select>
-                <select id="aYearFrom" onchange="triggerAnalytics()"></select>
-                <span style="font-weight:bold; margin-left:10px;">To:</span>
-                <select id="aMonthTo" onchange="triggerAnalytics()"></select>
-                <select id="aYearTo" onchange="triggerAnalytics()"></select>
-                <button class="btn-secondary" onclick="selectAllYearsAnalytics()">All Time</button>
-                <div style="border-left: 1px solid var(--border); margin: 0 10px; height: 30px;"></div>
-                <label
-                    style="cursor:pointer; display:flex; align-items:center; background:var(--card); padding:6px 12px; border-radius:4px; border:1px solid var(--border); font-weight:bold;">
-                    <input type="checkbox" id="aUpToCurrent" onchange="triggerAnalytics()"
-                        style="margin:0 8px 0 0; transform:scale(1.2);">
-                    Limit to Current Month
-                </label>
-            </div>
-            <div style="display:flex; justify-content:center; align-items:center; gap: 10px; flex-wrap: wrap;">
-                <span>Target:</span>
-                <select id="analyticsTarget" onchange="triggerAnalytics()" style="font-weight:bold;">
-                    <option value="expenses">➖ Expenses</option>
-                    <option value="income">➕ Income</option>
-                </select>
-                <span style="margin-left: 10px;">Status:</span>
-                <select id="analyticsStatus" onchange="triggerAnalytics()">
-                    <option value="all">All (Planned + Done)</option>
-                    <option value="done">Done (Paid Only)</option>
-                    <option value="planned">Planned (Pending Only)</option>
-                </select>
-                <span style="margin-left: 10px;">Group By:</span>
-                <select id="analyticsGroup" onchange="triggerAnalytics()">
-                    <option value="tag">Tag Category</option>
-                    <option value="color">Visual Color</option>
-                    <option value="month">Month (Trend)</option>
-                </select>
-                <span style="margin-left: 10px; font-weight:bold; color:var(--accent);">Chart Sort:</span>
-                <select id="analyticsSort" onchange="triggerAnalytics()">
-                    <option value="valDesc">Value (Highest First)</option>
-                    <option value="valAsc">Value (Lowest First)</option>
-                    <option value="alpha">Name (A-Z)</option>
-                </select>
-            </div>
-            <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
-                <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.8em;"
-                    onclick="aActiveTags = [...state.tags, 'Untagged', 'Base Salary']; triggerAnalytics();">✓ Select
-                    All</button>
-                <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.8em;"
-                    onclick="aActiveTags = []; triggerAnalytics();">✗ Clear All</button>
+        <div class="analytics-body">
+            <!-- Left Sidebar Controls -->
+            <div class="analytics-sidebar">
+                <!-- Chart Type Pills -->
+                <div class="analytics-sidebar-section">
+                    <div class="analytics-sidebar-section-title">📈 Chart Type</div>
+                    <div class="chart-type-pills">
+                        <button type="button" class="chart-pill" id="pillBar" onclick="setAnalyticsType('bar')">📊 Bar</button>
+                        <button type="button" class="chart-pill" id="pillPie" onclick="setAnalyticsType('pie')">🍩 Donut</button>
+                        <button type="button" class="chart-pill" id="pillPyramid" onclick="setAnalyticsType('pyramid')">🔺 Pyramid</button>
+                    </div>
+                </div>
+
+                <!-- Quick Presets -->
+                <div class="analytics-sidebar-section">
+                    <div class="analytics-sidebar-section-title">⚡ Quick Presets</div>
+                    <div style="display:flex; gap:6px;">
+                        <button type="button" class="btn-secondary" style="flex:1; padding:6px; font-size:0.8em; min-height:34px;" onclick="selectAnalyticsPreset('this_year')">This Year</button>
+                        <button type="button" class="btn-secondary" style="flex:1; padding:6px; font-size:0.8em; min-height:34px;" onclick="selectAnalyticsPreset('all_time')">All Time</button>
+                        <button type="button" class="btn-secondary" style="flex:1; padding:6px; font-size:0.8em; min-height:34px;" onclick="selectAnalyticsPreset('last_6_months')">Last 6 Mos</button>
+                    </div>
+                </div>
+
+                <!-- Date Range -->
+                <div class="analytics-sidebar-section">
+                    <div class="analytics-sidebar-section-title">📅 Date Range</div>
+                    <div style="display:flex; flex-direction:column; gap:6px;">
+                        <label style="font-size:0.8em; color:#aaa; margin:0;">From:</label>
+                        <div style="display:flex; gap:6px;">
+                            <select id="aMonthFrom" onchange="triggerAnalytics()" style="flex:1.5;"></select>
+                            <select id="aYearFrom" onchange="triggerAnalytics()" style="flex:1;"></select>
+                        </div>
+                        <label style="font-size:0.8em; color:#aaa; margin:4px 0 0 0;">To:</label>
+                        <div style="display:flex; gap:6px;">
+                            <select id="aMonthTo" onchange="triggerAnalytics()" style="flex:1.5;"></select>
+                            <select id="aYearTo" onchange="triggerAnalytics()" style="flex:1;"></select>
+                        </div>
+                        <label style="cursor:pointer; display:flex; align-items:center; gap:8px; background:var(--panel); padding:8px 10px; border-radius:4px; border:1px solid var(--border); font-size:0.85em; margin-top:4px;">
+                            <input type="checkbox" id="aUpToCurrent" onchange="triggerAnalytics()" style="margin:0; transform:scale(1.2);">
+                            Limit to Current Month
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Filters & Grouping -->
+                <div class="analytics-sidebar-section">
+                    <div class="analytics-sidebar-section-title">⚙️ Filters & Grouping</div>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <div>
+                            <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Target:</label>
+                            <select id="analyticsTarget" onchange="triggerAnalytics()" style="font-weight:bold; width:100%;">
+                                <option value="expenses">➖ Expenses</option>
+                                <option value="income">➕ Income</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Status:</label>
+                            <select id="analyticsStatus" onchange="triggerAnalytics()" style="width:100%;">
+                                <option value="all">All (Planned + Done)</option>
+                                <option value="done">Done (Paid Only)</option>
+                                <option value="planned">Planned (Pending Only)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Group By:</label>
+                            <select id="analyticsGroup" onchange="triggerAnalytics()" style="width:100%;">
+                                <option value="tag">Tag Category</option>
+                                <option value="color">Visual Color</option>
+                                <option value="month">Month (Trend)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Sort Chart:</label>
+                            <select id="analyticsSort" onchange="triggerAnalytics()" style="width:100%;">
+                                <option value="valDesc">Value (Highest First)</option>
+                                <option value="valAsc">Value (Lowest First)</option>
+                                <option value="alpha">Name (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tags Filter -->
+                <div class="analytics-sidebar-section">
+                    <div class="analytics-sidebar-section-title">🏷️ Filter by Tags</div>
+                    <div style="display:flex; gap:6px; margin-bottom:4px;">
+                        <button type="button" class="btn-secondary" style="flex:1; padding:4px 8px; font-size:0.8em; min-height:30px;" onclick="aActiveTags = [...state.tags, 'Untagged', 'Base Salary']; triggerAnalytics();">✓ Select All</button>
+                        <button type="button" class="btn-secondary" style="flex:1; padding:4px 8px; font-size:0.8em; min-height:30px;" onclick="aActiveTags = []; triggerAnalytics();">✗ Clear All</button>
+                    </div>
+                    <input type="text" id="analyticsTagSearch" placeholder="🔍 Search tags..." oninput="triggerAnalytics()" style="margin-bottom:6px; width:100%;">
+                    <div id="analyticsTagsFilter" style="display:flex; flex-wrap:wrap; gap:6px; padding:10px; background:var(--panel); border:1px solid var(--border); border-radius:6px; max-height:180px; overflow-y:auto;"></div>
+                </div>
             </div>
 
-            <input type="text" class="tag-search-input" id="analyticsTagSearch" placeholder="🔍 Search tags..."
-                oninput="triggerAnalytics()" style="max-width: 400px; margin: 0 auto;">
-            <div id="analyticsTagsFilter"
-                style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding: 15px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px;">
-            </div>
+            <!-- Main Analytics Output -->
+            <div class="analytics-main">
+                <!-- KPI Stat Cards -->
+                <div class="analytics-kpi-bar" id="analyticsKpiBar"></div>
 
-            <div id="analyticsContent"
-                style="display:flex; flex-direction:column; gap:10px; background: var(--panel); padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
+                <!-- Chart Canvas Card -->
+                <div class="analytics-chart-card" id="analyticsContent"></div>
             </div>
         </div>
     </div>
 
-    <!-- ALL MODALS AT ROOT LEVEL -->
+    <!-- Modals -->
     <div class="modal-overlay" id="historyModal" onclick="if(event.target===this) this.style.display='none'">
         <div class="modal" style="min-width: 550px; max-width: 700px; max-height: 80vh;">
             <div
                 style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.2em; font-weight:bold; flex-shrink: 0;">
-                <span>📜 Global History & Audit Log</span>
+                <span>📜 Global History &amp; Audit Log</span>
                 <button class="btn-danger"
                     onclick="document.getElementById('historyModal').style.display='none'">X</button>
             </div>
@@ -1047,7 +1491,85 @@
             </div>
         </div>
     </div>
+    <div class="modal-overlay" id="spendModal" onclick="if(event.target===this) this.style.display='none'"
+        style="z-index: 250;">
+        <div class="modal" style="min-width: 350px;">
+            <div
+                style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.2em; font-weight:bold;">
+                <span>🛒 Spend from <span id="spendModalPiggyName" style="color:var(--accent);"></span></span>
+                <button class="btn-danger"
+                    onclick="document.getElementById('spendModal').style.display='none'">X</button>
+            </div>
+            <div style="margin-bottom: 15px; color:#aaa;">
+                Available Balance: <strong id="spendModalPiggyBal" style="color:var(--text);"></strong>₾
+            </div>
+            <div style="display:flex; flex-direction:column; gap: 15px;">
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">What are you buying?</label>
+                    <input type="text" id="spendModalItemName" placeholder="e.g., New Phone" style="width:100%;">
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Amount (₾)</label>
+                    <input type="number" id="spendModalCost" placeholder="0.00" style="width:100%;" class="num-input">
+                </div>
+                <button onclick="confirmPiggySpend()"
+                    style="padding: 12px; font-size: 1.1em; background:var(--accent); margin-top: 5px;">Confirm
+                    Purchase</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="depositModal" onclick="if(event.target===this) closeDepositModal()"
+        style="z-index: 250; display:none;">
+        <div class="modal" style="min-width: 360px; max-width: 480px; width: 92%;">
+            <div
+                style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.2em; font-weight:bold; align-items:center;">
+                <span>🏦 Deposit to Piggy Bank</span>
+                <button class="btn-danger" onclick="closeDepositModal()">X</button>
+            </div>
 
+            <div id="depositModalNoPiggies" style="display:none; padding:15px; background:rgba(244,67,54,0.1); border:1px solid #f44336; border-radius:6px; margin-bottom:15px;">
+                <div style="font-weight:bold; margin-bottom:6px; color:#f44336;">No Piggy Banks Available</div>
+                <div style="font-size:0.9em; margin-bottom:10px; color:#aaa;">You need to create a Personal Piggy Bank before depositing money.</div>
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="quickPiggyName" placeholder="New Piggy Bank Name" style="flex:1;">
+                    <button onclick="quickCreatePiggy()" style="background:var(--accent); font-weight:bold;">Create</button>
+                </div>
+            </div>
+
+            <div id="depositModalForm" style="display:flex; flex-direction:column; gap: 14px;">
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Deposit from Month:</label>
+                    <select id="depositModalMonth" style="width:100%; padding:10px; font-size:1em; font-weight:bold; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:4px;">
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">In Which Personal Piggy Bank?</label>
+                    <select id="depositModalPiggySelect" style="width:100%; padding:10px; font-size:1em; font-weight:bold; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:4px;" onchange="updateDepositPiggyPreview()">
+                    </select>
+                    <div id="depositPiggyInfo" style="margin-top:6px; font-size:0.85em; color:#aaa; display:flex; justify-content:space-between; flex-wrap:wrap; gap:5px;">
+                        <span>Available Balance: <strong id="depositPiggyCurBal" style="color:var(--accent);">0.00</strong>₾</span>
+                        <span id="depositPiggyGoalText"></span>
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Amount to Deposit (₾):</label>
+                    <input type="text" id="depositModalAmount" class="math-input" placeholder="e.g. 150 or 50+100" style="width:100%; font-size:1.1em; padding:10px;" oninput="updateDepositAmountPreview()">
+                    <div id="depositAmountPreview" style="font-size:0.85em; color:var(--accent); margin-top:4px; font-weight:bold; min-height:16px;"></div>
+                </div>
+
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold;">Note / Description (Optional):</label>
+                    <input type="text" id="depositModalNote" placeholder="e.g. Monthly Savings, Bonus, etc." style="width:100%; padding:10px;">
+                </div>
+
+                <button onclick="confirmPiggyDeposit()"
+                    style="padding: 12px; font-size: 1.1em; background:var(--accent); font-weight:bold; margin-top: 5px;">Confirm
+                    Deposit</button>
+            </div>
+        </div>
+    </div>
     <div class="modal-overlay" id="tagsModal" onclick="if(event.target===this) this.style.display='none'">
         <div class="modal">
             <div
@@ -1095,7 +1617,7 @@
                 <div style="display:flex; flex-direction:column; gap:8px;">
                     <label
                         style="font-weight:bold; font-size:1.1em; border-bottom:1px solid var(--border); padding-bottom:5px;">Layout
-                        & Display</label>
+                        &amp; Display</label>
                     <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
                         <span>Dashboard Layout: </span>
                         <select id="boardLayoutSetting" style="flex-grow:1;">
@@ -1130,7 +1652,7 @@
                 <div style="display:flex; flex-direction:column; gap:8px;">
                     <label
                         style="font-weight:bold; font-size:1.1em; border-bottom:1px solid var(--border); padding-bottom:5px;">Data
-                        & Saving</label>
+                        &amp; Saving</label>
                     <label style="cursor:pointer; display:flex; align-items:center; gap:8px; margin-top:5px;">
                         <input type="checkbox" id="autosave" checked onchange="autoSave()">
                         Enable Autosave (Recommended)
@@ -1163,8 +1685,101 @@
                 </div>
             </div>
         </div>
-    </div>
-
+    <div class="modal-overlay" id="settingsModal" onclick="if(event.target===this) this.style.display='none'">
+        <div class="modal" style="min-width: 450px;">
+            <div
+                style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 1.2em; font-weight:bold;">
+                <span>⚙️ App Settings</span>
+                <button class="btn-danger"
+                    onclick="document.getElementById('settingsModal').style.display='none'">X</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:25px; overflow-y: auto; padding-right: 10px;">
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <label
+                        style="font-weight:bold; font-size:1.1em; border-bottom:1px solid var(--border); padding-bottom:5px;">Appearance</label>
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
+                        <span>Theme: </span>
+                        <select id="themeSelectModal" onchange="changeTheme(this.value)" style="flex-grow:1;">
+                            <option value="dark">🌙 Dark</option>
+                            <option value="light">☀️ Light</option>
+                            <option value="ocean">🌊 Ocean</option>
+                            <option value="sunset">🌇 Sunset</option>
+                            <option value="nature">🌿 Nature</option>
+                            <option value="berry">🔮 Berry</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <label
+                        style="font-weight:bold; font-size:1.1em; border-bottom:1px solid var(--border); padding-bottom:5px;">Layout
+                        &amp; Display</label>
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
+                        <span>Dashboard Layout: </span>
+                        <select id="boardLayoutSetting" style="flex-grow:1;">
+                            <option value="grid">Grid View</option>
+                            <option value="horizontal">Horizontal Scroll</option>
+                        </select>
+                    </div>
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:8px; margin-top:5px;">
+                        <input type="checkbox" id="gridScrollSetting">
+                        Enable Scrollable Grid Items (Dashboard)
+                    </label>
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
+                        <span>Month Page Layout: </span>
+                        <select id="pageLayoutSetting" style="flex-grow:1;">
+                            <option value="view-grid">Grid View</option>
+                            <option value="view-vertical">Vertical List</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <label
+                        style="font-weight:bold; font-size:1.1em; border-bottom:1px solid var(--border); padding-bottom:5px;">Yearly
+                        Baseline Salary</label>
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
+                        <span>Baseline Salary for <strong id="settingsYearHighlight"
+                                style="color:var(--accent);"></strong> (₾): </span>
+                        <input type="number" id="yearlySalarySetting" style="width: 100px;">
+                    </div>
+                    <span style="font-size:0.85em; color:#aaa; line-height:1.4;">This setting applies only to the
+                        currently selected year. Change the year on the dashboard to set different baselines.</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <label
+                        style="font-weight:bold; font-size:1.1em; border-bottom:1px solid var(--border); padding-bottom:5px;">Data
+                        &amp; Saving</label>
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:8px; margin-top:5px;">
+                        <input type="checkbox" id="autosave" checked onchange="autoSave()">
+                        Enable Autosave (Recommended)
+                    </label>
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
+                        <span>1 USD ($) = </span>
+                        <input type="number" id="usdRateSetting" style="width: 80px;" step="0.01">
+                        <span>GEL (₾)</span>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <label
+                        style="font-weight:bold; font-size:1.1em; border-bottom:1px solid var(--border); padding-bottom:5px;">Financial
+                        Month (Salary Date)</label>
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:8px; margin-top:5px;">
+                        <input type="checkbox" id="enableSalaryDateSetting">
+                        Enable Custom Salary Date
+                    </label>
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
+                        <span>Salary Day (1-31): </span>
+                        <input type="number" id="salaryDateSetting" style="width: 60px;" min="1" max="31">
+                    </div>
+                </div>
+                <button onclick="saveSettings()" style="padding: 12px; margin-top:10px;">💾 Save Settings</button>
+                <div
+                    style="display:flex; flex-direction:column; gap:8px; border-top: 1px dashed #f44336; margin-top: 5px; padding-top: 15px;">
+                    <label style="font-weight:bold; font-size:1.1em; color: #f44336;">Danger Zone</label>
+                    <button class="btn-danger" onclick="clearAllData()" style="padding: 10px; margin-top: 5px;">🗑️
+                        Clear All Local Data (Reset)</button>
+                </div>
+            </div>
+        </div>
     <div class="modal-overlay" id="mergeModal" style="z-index: 300;">
         <div class="modal" style="min-width: 600px; max-width: 800px; max-height: 85vh;">
             <div
@@ -1185,18 +1800,157 @@
                     <button class="btn-secondary" onclick="setAllMergeChoices('import')">Accept All Imports</button>
                 </div>
                 <button onclick="applyMerge()"
-                    style="padding: 12px 25px; font-size: 1.1em; background:var(--accent);">Confirm & Apply
+                    style="padding: 12px 25px; font-size: 1.1em; background:var(--accent);">Confirm &amp; Apply
                     Merge</button>
             </div>
         </div>
     </div>
 
+    <!-- Change #9: Import Choice Modal -->
+    <div class="modal-overlay" id="importChoiceModal" style="z-index: 350;">
+        <div class="modal" style="min-width: 420px; max-width: 520px;">
+            <div style="font-size:1.3em; font-weight:bold; margin-bottom:10px;">📥 Import Finance Data</div>
+            <p style="color:#aaa; font-size:0.95em; margin:0 0 20px 0; line-height:1.4;">
+                You already have financial data currently loaded in this project. How would you like to handle the incoming import?
+            </p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <button onclick="importChoiceReplace()" style="padding:14px; background:#f44336; font-size:1em; text-align:left; border-radius:6px; display:flex; flex-direction:column; gap:3px;">
+                    <strong style="font-size:1.05em;">🗑️ Delete & Replace All</strong>
+                    <span style="font-size:0.82em; opacity:0.9; font-weight:normal;">Wipes current loaded data and loads the imported file fresh</span>
+                </button>
+                <button onclick="importChoiceMerge()" style="padding:14px; background:var(--accent); font-size:1em; text-align:left; border-radius:6px; display:flex; flex-direction:column; gap:3px;">
+                    <strong style="font-size:1.05em;">🔄 Merge & Sync</strong>
+                    <span style="font-size:0.82em; opacity:0.9; font-weight:normal;">Keep current data and review incoming changes with conflict resolver</span>
+                </button>
+                <button onclick="importChoiceCancel()" class="btn-secondary" style="padding:12px; font-size:0.95em; border-radius:6px;">
+                    ✖ Cancel (Keep Current Data)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change #5: Loans & Savings Activity Hub Modal -->
+    <div class="modal-overlay" id="loansModal" onclick="if(event.target===this) this.style.display='none'" style="z-index: 260;">
+        <div class="modal" style="min-width: 550px; max-width: 720px; max-height: 88vh;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:14px; font-size:1.25em; font-weight:bold; align-items:center; flex-shrink:0;">
+                <span>📋 Loans & Savings Ledger</span>
+                <button class="btn-danger" onclick="document.getElementById('loansModal').style.display='none'">X</button>
+            </div>
+
+            <div class="modal-tabs">
+                <button type="button" class="modal-tab-btn active" id="tabBtnLoans" onclick="switchLoansTab('loans')">💳 Loans Manager</button>
+                <button type="button" class="modal-tab-btn" id="tabBtnLedger" onclick="switchLoansTab('ledger')">📒 Accumulated & Spent Ledger</button>
+            </div>
+
+            <!-- Tab 1: Loans Content -->
+            <div id="loansTabContent" style="display:flex; flex-direction:column; gap:16px; overflow-y:auto; flex-grow:1; padding-right:4px;">
+                <!-- Add Loan Form -->
+                <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px; flex-shrink:0;">
+                    <div style="font-weight:bold; margin-bottom:12px; color:var(--accent); font-size:1.05em;">➕ Take / Record New Loan</div>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <div>
+                            <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Loan Description / Lender / Borrower:</label>
+                            <input type="text" id="loanName" placeholder="e.g. Bank of Georgia Loan, Friend loan" style="width:100%;">
+                        </div>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <div style="flex:1; min-width:130px;">
+                                <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Loan Amount (₾):</label>
+                                <input type="number" id="loanAmount" placeholder="Amount (₾)" class="num-input" style="width:100%;">
+                            </div>
+                            <div style="flex:1.3; min-width:160px;">
+                                <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Receive Money In Month:</label>
+                                <select id="loanReceivedMonth" style="width:100%;"></select>
+                            </div>
+                            <div style="flex:1.3; min-width:160px;">
+                                <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Deposit into Vault (Optional):</label>
+                                <select id="loanTargetPiggy" style="width:100%;"></select>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Payback Schedule / Due Date / Note (Optional):</label>
+                            <input type="text" id="loanPayback" placeholder="e.g. Pay 200₾/mo by December, or Due in 6 mos" style="width:100%;">
+                        </div>
+                        <button onclick="addLoan()" style="padding:10px 20px; font-weight:bold; margin-top:4px;">+ Create Loan & Receive Money</button>
+                    </div>
+                </div>
+
+                <!-- Active Loans -->
+                <div>
+                    <div style="font-weight:bold; font-size:0.85em; letter-spacing:1px; text-transform:uppercase; color:#aaa; margin-bottom:8px;">Active Loans (Pending Repayment)</div>
+                    <div id="activeLoansContainer" style="display:flex; flex-direction:column; gap:8px;"></div>
+                </div>
+
+                <!-- Paid Loans -->
+                <div>
+                    <div style="font-weight:bold; font-size:0.85em; letter-spacing:1px; text-transform:uppercase; color:#aaa; margin-bottom:8px;">All Loans Already Paid Out</div>
+                    <div id="paidLoansContainer" style="display:flex; flex-direction:column; gap:8px;"></div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Manual Accumulated & Spent Ledger -->
+            <div id="ledgerTabContent" style="display:none; flex-direction:column; gap:16px; overflow-y:auto; flex-grow:1; padding-right:4px;">
+                <!-- KPI summary -->
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:10px;" id="ledgerKpiBar"></div>
+
+                <!-- Add Manual Record Form -->
+                <div style="background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px; flex-shrink:0;">
+                    <div style="font-weight:bold; margin-bottom:10px; color:var(--accent); font-size:1.05em;">✍️ Add Manual Accumulated or Spent Record</div>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <div style="flex:1; min-width:140px;">
+                                <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Action Type:</label>
+                                <select id="ledgerType" style="width:100%; font-weight:bold;">
+                                    <option value="accumulated">💰 Money Accumulated / Saved</option>
+                                    <option value="spent">🛒 Money Spent / Paid</option>
+                                </select>
+                            </div>
+                            <div style="flex:1; min-width:120px;">
+                                <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Amount (₾):</label>
+                                <input type="number" id="ledgerAmount" placeholder="0.00" class="num-input" style="width:100%;">
+                            </div>
+                            <div style="flex:1; min-width:140px;">
+                                <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Date:</label>
+                                <input type="date" id="ledgerDate" style="width:100%;">
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Description / Title:</label>
+                            <input type="text" id="ledgerDesc" placeholder="e.g. Side project income, Emergency laptop repair, Vacation saving" style="width:100%;">
+                        </div>
+                        <div>
+                            <label style="font-size:0.8em; color:#aaa; margin-bottom:3px; display:block;">Note / Category (Optional):</label>
+                            <input type="text" id="ledgerNote" placeholder="Extra details..." style="width:100%;">
+                        </div>
+                        <button onclick="addLedgerEntry()" style="padding:10px 20px; font-weight:bold;">+ Add Manual Record</button>
+                    </div>
+                </div>
+
+                <!-- Ledger History List -->
+                <div>
+                    <div style="font-weight:bold; font-size:0.85em; letter-spacing:1px; text-transform:uppercase; color:#aaa; margin-bottom:8px;">Manual Ledger Entries</div>
+                    <div id="ledgerEntriesContainer" style="display:flex; flex-direction:column; gap:8px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Link to the JS file -->
     <script>
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const presetColors = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#9e9e9e", "#607d8b", "#ffffff"];
 
-        let state = { theme: 'dark', tags: ["Essentials", "Hardware", "Leisure", "Savings"], years: {}, longTerm: { items: [] }, piggyBanks: [], notes: "", history: [], settings: {} };
+        let state = {
+            theme: 'dark',
+            tags: ["Essentials", "Hardware", "Leisure", "Savings"],
+            years: {},
+            longTerm: { items: [] },
+            piggyBanks: [],
+            notes: "",
+            history: [],
+            settings: {},
+            loans: [],
+            manualLedger: []
+        };
 
         let currentYear = new Date().getFullYear();
         let activeMonth = null;
@@ -1212,8 +1966,11 @@
 
         let mergeConflicts = [];
         let mergeImportedData = null;
+        let pendingImportData = null;
 
         let analyticsInitialized = false;
+        let activeLoansTab = 'loans';
+        let allSectionsExpanded = null;
 
         function fmt(num) { return Number(Math.round(num + "e2") + "e-2"); }
         function toGEL(amt, curr) { return curr === 'USD' ? amt * (state.settings.usdRate || 2.7) : amt; }
@@ -1275,7 +2032,6 @@
             }
         }
 
-        // --- 1. Clear History By Exact Date Range ---
         function clearHistoryRange() {
             let from = document.getElementById('histFromDate').value;
             let to = document.getElementById('histToDate').value;
@@ -1283,12 +2039,9 @@
 
             let fromDate = new Date(from);
             let toDate = new Date(to);
-
-            // Make sure the "to" date covers the entire day up to 11:59 PM
             toDate.setHours(23, 59, 59, 999);
 
             if (confirm(`Are you sure you want to delete all history logs from ${from} to ${to}?`)) {
-                // Keep logs that happened BEFORE the fromDate OR AFTER the toDate
                 state.history = state.history.filter(h => h.time < fromDate.getTime() || h.time > toDate.getTime());
                 openHistoryModal();
                 autoSave();
@@ -1310,7 +2063,6 @@
                 e.preventDefault();
             });
 
-            // Touch support for resizer
             resizer.addEventListener('touchstart', (e) => {
                 isResizingFooter = true;
                 startY = e.touches[0].clientY;
@@ -1327,7 +2079,6 @@
                 footer.style.height = newHeight + 'px';
             });
 
-            // Touch support for resizer
             document.addEventListener('touchmove', (e) => {
                 if (!isResizingFooter) return;
                 let diff = startY - e.touches[0].clientY;
@@ -1353,7 +2104,10 @@
         }
 
         document.addEventListener('input', e => {
-            if (e.target.classList.contains('num-input')) {
+            if (e.target.classList.contains('math-input')) {
+                let val = e.target.value.replace(/[^0-9.\-+*\/xX() ,\n\r]/g, '');
+                if (e.target.value !== val) e.target.value = val;
+            } else if (e.target.classList.contains('num-input')) {
                 let val = e.target.value.replace(/,/g, '.').replace(/[^0-9.\-]/g, '');
                 let parts = val.split('.');
                 if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
@@ -1368,8 +2122,11 @@
                 return;
             }
             if (event.key === "Escape") {
-                let modals = ['tagsModal', 'settingsModal', 'mergeModal', 'historyModal', 'spendModal'];
-                modals.forEach(m => { if (document.getElementById(m).style.display === 'flex') document.getElementById(m).style.display = 'none'; });
+                let modals = ['tagsModal', 'settingsModal', 'mergeModal', 'historyModal', 'spendModal', 'depositModal', 'loansModal', 'importChoiceModal'];
+                modals.forEach(m => {
+                    let el = document.getElementById(m);
+                    if (el && el.style.display === 'flex') el.style.display = 'none';
+                });
                 if (document.getElementById('analyticsView').style.display === 'flex') closeAnalyticsPage();
                 else if (activeMonth !== null) closeMonthPage();
             }
@@ -1390,6 +2147,9 @@
             if (state.settings.gridScroll === undefined) state.settings.gridScroll = false;
 
             if (!state.history) state.history = [];
+            if (!state.loans) state.loans = [];
+            if (!state.manualLedger) state.manualLedger = [];
+            if (!state.piggyBanks) state.piggyBanks = [];
             if (state.tags) state.tags.sort((a, b) => a.localeCompare(b));
 
             currentYear = getFinancialDate().year;
@@ -1407,7 +2167,7 @@
                     });
                 });
             }
-            if (state.longTerm.items) state.longTerm.items.forEach(i => {
+            if (state.longTerm && state.longTerm.items) state.longTerm.items.forEach(i => {
                 if (typeof i.tag === 'string') { i.tags = [i.tag]; delete i.tag; }
                 if (!i.tags) i.tags = [];
                 if (!i.currency) i.currency = 'GEL';
@@ -1438,8 +2198,19 @@
             }
         }
 
-        function changeYear(dir) { currentYear += dir; document.getElementById('yearDisplay').innerText = currentYear; if (!state.years[currentYear]) generateYear(currentYear); initUI(); }
-        function changeTheme(th) { state.theme = th; document.body.setAttribute('data-theme', th); autoSave(); }
+        function changeYear(dir) {
+            currentYear += dir;
+            document.getElementById('yearDisplay').innerText = currentYear;
+            if (!state.years[currentYear]) generateYear(currentYear);
+            initUI();
+        }
+
+        function changeTheme(th) {
+            state.theme = th;
+            document.body.setAttribute('data-theme', th);
+            autoSave();
+        }
+
         function updateNotes(val) { state.notes = val; autoSave(); }
 
         function openSettingsModal() {
@@ -1478,8 +2249,201 @@
             renderBoard(); renderExtras(); autoSave();
         }
 
-        function updateTypePlaceholder() { document.getElementById('itemCost').placeholder = document.getElementById('itemType').value === 'income' ? 'Amt' : 'Cost'; }
+        function parseCostExpression(raw) {
+            if (raw === null || raw === undefined) return 0;
+            if (typeof raw === 'number') return isNaN(raw) ? 0 : raw;
+            let s = String(raw).trim();
+            if (!s) return 0;
+            s = s.replace(/[₾$]/g, '').trim();
+            if (!s) return 0;
 
+            s = s.replace(/[\u2212\u2013\u2014]/g, '-').replace(/[xX\u00d7]/g, '*');
+
+            if (!/[+\-*\/()]/.test(s)) {
+                let parts = s.split(/[\s,\n\r]+/).filter(p => p.length > 0);
+                if (parts.length > 1) {
+                    let sum = 0;
+                    let foundAny = false;
+                    for (let p of parts) {
+                        let num = parseFloat(p);
+                        if (!isNaN(num)) {
+                            sum += num;
+                            foundAny = true;
+                        }
+                    }
+                    if (foundAny) return fmt(sum);
+                } else if (parts.length === 1) {
+                    let num = parseFloat(parts[0]);
+                    return isNaN(num) ? 0 : fmt(num);
+                }
+            }
+
+            let normalized = s.replace(/[\n\r,]+/g, ' + ');
+            normalized = normalized.replace(/(\d)\s+(\d)/g, '$1 + $2');
+            normalized = normalized.replace(/\s+/g, ' ');
+
+            if (/[^0-9.\-+*\/()\s]/.test(normalized)) {
+                return parseFloat(s) || 0;
+            }
+
+            try {
+                let evalStr = normalized.replace(/[+\-*\/]+\s*$/, '').trim();
+                if (!evalStr) return parseFloat(s) || 0;
+                let res = Function('"use strict"; return (' + evalStr + ')')();
+                if (typeof res === 'number' && !isNaN(res) && isFinite(res)) {
+                    return fmt(res);
+                }
+            } catch (err) {
+            }
+            return parseFloat(s) || 0;
+        }
+
+        function extractNumbersAndSum(text) {
+            if (!text) return { count: 0, sum: 0, numbers: [] };
+            let lines = text.split(/[\n\r]+/);
+            let allNums = [];
+            let total = 0;
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (!trimmed) return;
+                let lineVal = parseCostExpression(trimmed);
+                if (lineVal !== 0 || trimmed === '0') {
+                    allNums.push(lineVal);
+                    total += lineVal;
+                }
+            });
+            return { count: allNums.length, sum: fmt(total), numbers: allNums };
+        }
+
+        function updateSubCostPreview(itemId) {
+            let input = document.getElementById(`subCost-${itemId}`);
+            let prev = document.getElementById(`subCostPreview-${itemId}`);
+            if (!input || !prev) return;
+            let val = input.value.trim();
+            if (/[+\-*\/xX()]/.test(val) || /[\s,]+/.test(val)) {
+                let computed = parseCostExpression(val);
+                prev.style.display = 'block';
+                prev.innerText = `= ${computed}₾`;
+            } else {
+                prev.style.display = 'none';
+                prev.innerText = '';
+            }
+        }
+
+        function toggleSumHelper(itemId) {
+            let el = document.getElementById(`sumHelperDrawer-${itemId}`);
+            if (!el) return;
+            let isHidden = el.style.display === 'none' || !el.style.display;
+            el.style.display = isHidden ? 'block' : 'none';
+            if (isHidden) {
+                let txt = document.getElementById(`sumHelperText-${itemId}`);
+                if (txt) {
+                    let cur = document.getElementById(`subCost-${itemId}`).value.trim();
+                    if (cur && !txt.value) txt.value = cur;
+                    txt.focus();
+                    updateSumHelperPreview(itemId);
+                }
+            }
+        }
+
+        function updateSumHelperPreview(itemId) {
+            let txt = document.getElementById(`sumHelperText-${itemId}`);
+            let stats = document.getElementById(`sumHelperStats-${itemId}`);
+            if (!txt || !stats) return;
+            let res = extractNumbersAndSum(txt.value);
+            stats.innerText = `Total: ${res.sum}₾ (${res.count} ${res.count === 1 ? 'number' : 'numbers'})`;
+        }
+
+        function applySumHelperToSubCost(itemId) {
+            let txt = document.getElementById(`sumHelperText-${itemId}`);
+            let target = document.getElementById(`subCost-${itemId}`);
+            if (!txt || !target) return;
+            let res = extractNumbersAndSum(txt.value);
+            target.value = res.sum;
+            updateSubCostPreview(itemId);
+            toggleSumHelper(itemId);
+            target.focus();
+        }
+
+        function updateTypePlaceholder() {
+            let t = document.getElementById('itemType').value;
+            document.getElementById('itemCost').placeholder = t === 'income' ? 'Amt' : 'Cost';
+        }
+
+        // ============================================================
+        // Change #1: Top Statistics Bar (Before Months, not in nav)
+        // ============================================================
+        function renderYearStats() {
+            let bar = document.getElementById('yearStatsBar');
+            if (!bar) return;
+            if (!state.years[currentYear]) { bar.innerHTML = ''; return; }
+
+            let totalPlannedIncome = 0;
+            let totalPlannedExpenses = 0;
+            let totalActualSpent = 0;
+            let totalActualIncome = 0;
+
+            months.forEach(month => {
+                let mData = state.years[currentYear][month];
+                if (!mData) return;
+                let sal = mData.salary !== null ? mData.salary : state.years[currentYear].yearlySalary;
+                let incomes = mData.items.filter(i => i.isIncome);
+                let expenses = mData.items.filter(i => !i.isIncome);
+
+                totalPlannedIncome += sal + incomes.reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0);
+                totalPlannedExpenses += expenses.reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0);
+                totalActualSpent += expenses.filter(i => i.done).reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0);
+                totalActualIncome += sal + incomes.filter(i => i.done).reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0);
+            });
+
+            totalPlannedIncome = fmt(totalPlannedIncome);
+            totalPlannedExpenses = fmt(totalPlannedExpenses);
+            totalActualSpent = fmt(totalActualSpent);
+            totalActualIncome = fmt(totalActualIncome);
+
+            let rem = fmt(totalPlannedIncome - totalPlannedExpenses);
+            let remClass = rem >= 0 ? 'pos' : 'neg';
+
+            let totalPiggySavings = fmt((state.piggyBanks || []).reduce((s, p) => s + (p.balance || 0), 0));
+
+            bar.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-label">Yearly Income (Plan)</div>
+                    <div class="stat-value pos">${totalPlannedIncome}₾</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📤</div>
+                    <div class="stat-label">Yearly Expenses (Plan)</div>
+                    <div class="stat-value neg">${totalPlannedExpenses}₾</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-label">Yearly Remaining</div>
+                    <div class="stat-value ${remClass}">${rem}₾</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💳</div>
+                    <div class="stat-label">Actually Spent (Paid)</div>
+                    <div class="stat-value" style="color:#ff9800;">${totalActualSpent}₾</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏦</div>
+                    <div class="stat-label">Actually Received</div>
+                    <div class="stat-value" style="color:#2196f3;">${totalActualIncome}₾</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🐷</div>
+                    <div class="stat-label">Vaults Total Balance</div>
+                    <div class="stat-value pos">${totalPiggySavings}₾</div>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        // Dashboard Board Render
+        // Requirement 7: all expenses as currently displayed must stay
+        // ============================================================
         function renderBoard() {
             const board = document.getElementById('board');
             board.innerHTML = '';
@@ -1497,13 +2461,15 @@
                 let mData = state.years[currentYear][month];
                 let sal = mData.salary !== null ? mData.salary : state.years[currentYear].yearlySalary;
 
-                let incomes = mData.items.filter(i => i.isIncome); let expenses = mData.items.filter(i => !i.isIncome);
+                let incomes = mData.items.filter(i => i.isIncome);
+                let expenses = mData.items.filter(i => !i.isIncome);
                 let plannedIncome = fmt(incomes.reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0));
                 let actualIncome = fmt(incomes.filter(i => i.done).reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0));
                 let plannedSpent = fmt(expenses.reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0));
                 let actualSpent = fmt(expenses.filter(i => i.done).reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0));
 
-                let plannedRem = fmt(sal + plannedIncome - plannedSpent); let actualRem = fmt(sal + actualIncome - actualSpent);
+                let plannedRem = fmt(sal + plannedIncome - plannedSpent);
+                let actualRem = fmt(sal + actualIncome - actualSpent);
 
                 let isCurrentMonth = (currentYear === fDate.year && month === months[fDate.monthIdx]);
 
@@ -1514,8 +2480,12 @@
                 }
 
                 col.onclick = () => openMonthPage(month);
-                col.ondragover = (e) => e.preventDefault(); col.ondrop = (e) => dropToMonth(e, month);
-                let mathString = plannedIncome > 0 ? `Budget: ${sal} + ${plannedIncome} - ${plannedSpent} = <strong class="${plannedRem >= 0 ? 'pos' : 'neg'}">${plannedRem}₾</strong>` : `Planned: ${sal} - ${plannedSpent} = <strong class="${plannedRem >= 0 ? 'pos' : 'neg'}">${plannedRem}₾</strong>`;
+                col.ondragover = (e) => e.preventDefault();
+                col.ondrop = (e) => dropToMonth(e, month);
+
+                let mathString = plannedIncome > 0 ?
+                    `Budget: ${sal} + ${plannedIncome} - ${plannedSpent} = <strong class="${plannedRem >= 0 ? 'pos' : 'neg'}">${plannedRem}₾</strong>` :
+                    `Planned: ${sal} - ${plannedSpent} = <strong class="${plannedRem >= 0 ? 'pos' : 'neg'}">${plannedRem}₾</strong>`;
 
                 let incHtml = incomes.map(item => `
             <div class="dash-item ${item.done ? 'done' : ''}" style="border-color: ${item.color}" 
@@ -1561,11 +2531,21 @@
         `;
                 board.appendChild(col);
             });
+
+            // Update top statistics bar
+            renderYearStats();
             autoSave();
         }
 
+        // ============================================================
+        // Bottom Sections & Piggy Banks
+        // Requirement 4: Savings goal identifier & progress
+        // Requirement 5: Loans button next to title
+        // ============================================================
         function renderExtras() {
-            let lt = state.longTerm; let incomes = lt.items.filter(i => i.isIncome); let expenses = lt.items.filter(i => !i.isIncome);
+            let lt = state.longTerm;
+            let incomes = lt.items.filter(i => i.isIncome);
+            let expenses = lt.items.filter(i => !i.isIncome);
             let ltPlanned = fmt(expenses.reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0));
             let ltFinished = fmt(expenses.filter(i => i.done).reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0));
             let incText = incomes.length > 0 ? ` (+${fmt(incomes.reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0))}₾ Inc)` : '';
@@ -1586,43 +2566,87 @@
         <div class="summary-bottom">Finished (Paid) Costs: <strong class="pos">${ltFinished}₾</strong></div>
     `;
 
-            let totalPlanMonthly = fmt(state.piggyBanks.reduce((s, p) => s + (p.monthlyPlan || 0), 0));
-            let monthlyPlanHtml = totalPlanMonthly > 0 ? `<span style="font-size:0.85em; color:#aaa; margin-left: 10px;">(Goal: ${totalPlanMonthly}₾/mo)</span>` : '';
+            let totalPlanMonthly = fmt((state.piggyBanks || []).reduce((s, p) => s + (p.monthlyPlan || 0), 0));
+            let monthlyPlanHtml = totalPlanMonthly > 0 ? `<span style="font-size:0.85em; color:#aaa; margin-left: 8px;">(Total Goal: ${totalPlanMonthly}₾/mo)</span>` : '';
 
-            document.getElementById('piggyBox').innerHTML = `
-        <div class="month-header" style="border-bottom: 1px dashed var(--border);"><strong style="font-size: 1.2em;">Personal Piggy Banks ${monthlyPlanHtml}</strong></div>
-        <div style="padding:15px; display:flex; flex-direction:column; gap:10px; flex-grow:1; overflow-y:auto;">
-            ${state.piggyBanks.map(p => `
-                <div style="background:var(--card); padding:12px; border-radius:6px; border-left:6px solid ${p.color}; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; cursor:grab;"
+            let piggyCardsHtml = (state.piggyBanks || []).map(p => {
+                // Change #4: Savings Goal Identifier
+                let goalBoxHtml = '';
+                if (!p.isEditing && p.saveMonths && p.monthlyPlan) {
+                    let goalTotal = fmt(p.monthlyPlan * p.saveMonths);
+                    let monthsCollected = p.monthlyPlan > 0 ? (p.balance / p.monthlyPlan) : 0;
+                    let monthsRemaining = Math.max(0, p.saveMonths - monthsCollected);
+                    let pct = Math.min(100, Math.max(0, goalTotal > 0 ? (p.balance / goalTotal) * 100 : 0));
+                    let barColor = pct >= 100 ? '#4caf50' : (pct >= 60 ? '#8bc34a' : (pct >= 30 ? '#ff9800' : '#f44336'));
+                    goalBoxHtml = `
+                        <div class="piggy-goal-box">
+                            <div style="display:flex; justify-content:space-between; font-size:0.82em; font-weight:bold; margin-bottom:3px;">
+                                <span>🎯 Goal: ${p.monthlyPlan}₾/mo × ${p.saveMonths} mos</span>
+                                <span style="color:var(--accent);">Final: ${goalTotal}₾</span>
+                            </div>
+                            <div class="piggy-progress-bar-outer" title="${pct.toFixed(1)}% collected">
+                                <div class="piggy-progress-bar-inner" style="width:${pct}%; background:${barColor};"></div>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; font-size:0.75em; color:#aaa;">
+                                <span>⏱️ ${monthsCollected.toFixed(1)} of ${p.saveMonths} mos (${pct.toFixed(0)}%)</span>
+                                <span>${monthsRemaining.toFixed(1)} mos left</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                return `
+                <div style="background:var(--card); padding:12px; border-radius:6px; border-left:6px solid ${p.color}; display:flex; flex-direction:column; gap:8px; cursor:grab;"
                      draggable="true" ondragstart="piggyDragStart(event, '${p.id}')" ondragover="event.preventDefault()" ondrop="piggyDrop(event, '${p.id}')">
                     ${p.isEditing ? `
-                        <input type="text" id="piggyName-${p.id}" value="${p.name}" style="flex-grow:1; min-width: 100px;">
-                        <input type="text" class="num-input" id="piggyPlan-${p.id}" value="${p.monthlyPlan || ''}" placeholder="Plan/mo ₾" style="width:80px;">
-                        <input type="color" id="piggyColor-${p.id}" value="${p.color}" style="padding:0; width:30px; height:30px; cursor:pointer; border:none; background:transparent;">
-                        <button onclick="savePiggy('${p.id}')">Save</button>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                            <input type="text" id="piggyName-${p.id}" value="${p.name}" style="flex:2; min-width:120px;" placeholder="Vault Name">
+                            <input type="text" class="num-input" id="piggyPlan-${p.id}" value="${p.monthlyPlan || ''}" placeholder="Plan ₾/mo" style="width:85px;">
+                            <input type="number" id="piggyMonths-${p.id}" value="${p.saveMonths || ''}" placeholder="Months" style="width:75px;" min="1">
+                            <input type="color" id="piggyColor-${p.id}" value="${p.color}" style="padding:0; width:30px; height:30px; cursor:pointer; border:none; background:transparent;">
+                            <button onclick="savePiggy('${p.id}')" style="min-height:36px; padding:6px 14px;">Save</button>
+                        </div>
                         ` : `
-                            <div style="flex-grow:1; pointer-events:none; min-width: 70px;">
-                                <strong style="font-size:1.1em;">${p.name}</strong>
-                                ${p.monthlyPlan ? `<div style="font-size:0.85em; color:#aaa;">Plan: ${p.monthlyPlan}₾ / mo</div>` : ''}
-                            </div>
-                            
-                            <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap; margin-left:auto; justify-content:flex-end;">
-                                <div style="font-size:1.3em; font-weight:bold; color:var(--accent); white-space:nowrap;">${fmt(p.balance)}₾</div>
-                                <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
-                                    <input type="text" class="num-input" id="piggyVal-${p.id}" placeholder="₾" style="width:70px;">
-                                    <button class="btn-secondary" style="background:#2196f3; color:white; font-weight:bold;" onclick="spendFromPiggy('${p.id}')">🛒 Spend</button>
-                                    <button onclick="updatePiggy('${p.id}', 1)">+</button>
-                                    <button class="btn-danger" onclick="updatePiggy('${p.id}', -1)">-</button>
-                                    <button class="btn-secondary" style="margin-left:3px;" onclick="togglePiggyEdit('${p.id}')">✏️</button>
-                                    <button class="btn-danger" onclick="deletePiggy('${p.id}')">X</button>
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                                <div style="flex-grow:1; pointer-events:none; min-width:80px;">
+                                    <strong style="font-size:1.1em;">${p.name}</strong>
+                                    ${p.monthlyPlan && !p.saveMonths ? `<div style="font-size:0.82em; color:#aaa;">Plan: ${p.monthlyPlan}₾ / mo</div>` : ''}
+                                </div>
+                                
+                                <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-left:auto; justify-content:flex-end;">
+                                    <div style="font-size:1.3em; font-weight:bold; color:var(--accent); white-space:nowrap;">${fmt(p.balance)}₾</div>
+                                    <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+                                        <input type="text" class="num-input" id="piggyVal-${p.id}" placeholder="₾" style="width:65px;">
+                                        <button class="btn-secondary" style="background:#2196f3; color:white; font-weight:bold; padding:6px 10px; min-height:36px;" onclick="spendFromPiggy('${p.id}')">🛒 Spend</button>
+                                        <button onclick="updatePiggy('${p.id}', 1)" style="min-height:36px; padding:6px 10px;">+</button>
+                                        <button class="btn-danger" onclick="updatePiggy('${p.id}', -1)" style="min-height:36px; padding:6px 10px;">-</button>
+                                        <button class="btn-secondary" style="margin-left:3px; min-height:36px; padding:6px 10px;" onclick="togglePiggyEdit('${p.id}')">✏️</button>
+                                        <button class="btn-danger" onclick="deletePiggy('${p.id}')" style="min-height:36px; padding:6px 10px;">X</button>
+                                    </div>
                                 </div>
                             </div>
+                            ${goalBoxHtml}
                         `}
                 </div>
-            `).join('')}
-            <div style="margin-top:auto; border-top:1px dashed var(--border); padding-top:15px; display:flex; gap:10px;">
-                <input type="text" id="newPiggyName" placeholder="New Piggy Bank Name" style="flex-grow:1;" onkeydown="if(event.key==='Enter') addPiggy()">
-                <button onclick="addPiggy()">Create Vault</button>
+            `;
+            }).join('');
+
+            document.getElementById('piggyBox').innerHTML = `
+        <div class="month-header" style="border-bottom: 1px dashed var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div><strong style="font-size: 1.2em;">Personal Piggy Banks ${monthlyPlanHtml}</strong></div>
+            <div style="display:flex; gap:6px; align-items:center;">
+                <!-- Change #5: Loans & Activity Button next to title -->
+                <button class="btn-secondary" style="padding:5px 12px; font-size:0.85em; background:rgba(33,150,243,0.18); border:1px solid #2196f3; color:var(--text); font-weight:bold;" onclick="openLoansModal()">📋 Loans & Ledger</button>
+                <button class="btn-secondary" style="padding:5px 12px; font-size:0.85em; background:rgba(76,175,80,0.18); border:1px solid var(--accent); color:var(--text); font-weight:bold;" onclick="openDepositModal()">🏦 Deposit</button>
+            </div>
+        </div>
+        <div style="padding:15px; display:flex; flex-direction:column; gap:10px; flex-grow:1; overflow-y:auto;">
+            ${piggyCardsHtml}
+            <div style="margin-top:auto; border-top:1px dashed var(--border); padding-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+                <input type="text" id="newPiggyName" placeholder="New Vault Name" style="flex:2; min-width:110px;" onkeydown="if(event.key==='Enter') addPiggy()">
+                <input type="text" class="num-input" id="newPiggyPlan" placeholder="Plan ₾/mo" style="width:85px;">
+                <input type="number" id="newPiggyMonths" placeholder="Mos (e.g. 5)" style="width:80px;" min="1">
+                <button onclick="addPiggy()" style="min-height:38px; padding:6px 14px;">Create Vault</button>
             </div>
         </div>
     `;
@@ -1713,31 +2737,193 @@
             autoSave();
         }
 
+        function openDepositModal(sourceMonth, targetPiggyId) {
+            let fDate = getFinancialDate();
+            let defMonth = sourceMonth || (activeMonth && activeMonth !== 'LongTerm' ? activeMonth : months[fDate.monthIdx]);
+
+            let monthSel = document.getElementById('depositModalMonth');
+            monthSel.innerHTML = months.map(m => `<option value="${m}" ${m === defMonth ? 'selected' : ''}>${m} ${currentYear}</option>`).join('');
+
+            let piggySel = document.getElementById('depositModalPiggySelect');
+            let noBox = document.getElementById('depositModalNoPiggies');
+            let formBox = document.getElementById('depositModalForm');
+
+            if (!state.piggyBanks || state.piggyBanks.length === 0) {
+                noBox.style.display = 'block';
+                formBox.style.display = 'none';
+            } else {
+                noBox.style.display = 'none';
+                formBox.style.display = 'flex';
+                piggySel.innerHTML = state.piggyBanks.map(p => `
+                    <option value="${p.id}" ${p.id === targetPiggyId ? 'selected' : ''}>${p.name} (Balance: ${fmt(p.balance)}₾)</option>
+                `).join('');
+                updateDepositPiggyPreview();
+            }
+
+            document.getElementById('depositModalAmount').value = '';
+            document.getElementById('depositModalNote').value = '';
+            document.getElementById('depositAmountPreview').innerText = '';
+
+            let modal = document.getElementById('depositModal');
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                let amtInput = document.getElementById('depositModalAmount');
+                if (amtInput && formBox.style.display !== 'none') amtInput.focus();
+            }, 100);
+        }
+
+        function closeDepositModal() {
+            let m = document.getElementById('depositModal');
+            if (m) m.style.display = 'none';
+        }
+
+        function updateDepositPiggyPreview() {
+            let selId = document.getElementById('depositModalPiggySelect').value;
+            let p = (state.piggyBanks || []).find(x => x.id === selId);
+            if (!p) return;
+            document.getElementById('depositPiggyCurBal').innerText = fmt(p.balance);
+            document.getElementById('depositPiggyGoalText').innerText = p.monthlyPlan ? `Monthly Goal: ${p.monthlyPlan}₾` : '';
+        }
+
+        function updateDepositAmountPreview() {
+            let input = document.getElementById('depositModalAmount');
+            let prev = document.getElementById('depositAmountPreview');
+            if (!input || !prev) return;
+            let val = input.value.trim();
+            if (/[+\-*\/xX()]/.test(val) || /[\s,]+/.test(val)) {
+                let computed = parseCostExpression(val);
+                prev.innerText = `= ${computed}₾`;
+            } else {
+                prev.innerText = '';
+            }
+        }
+
+        function quickCreatePiggy() {
+            let n = document.getElementById('quickPiggyName').value.trim();
+            if (!n) return;
+            let newId = Date.now().toString();
+            state.piggyBanks.push({ id: newId, name: n, balance: 0, monthlyPlan: null, saveMonths: null, color: selectedColor, isEditing: false });
+            logHistory(newId, n, 'ADD', `Created Piggy Bank`);
+            renderExtras(); autoSave();
+            document.getElementById('quickPiggyName').value = '';
+            openDepositModal(document.getElementById('depositModalMonth').value, newId);
+        }
+
+        function confirmPiggyDeposit() {
+            let piggyId = document.getElementById('depositModalPiggySelect').value;
+            let b = state.piggyBanks.find(p => p.id === piggyId);
+            if (!b) { alert("Please select a piggy bank."); return; }
+
+            let targetMonth = document.getElementById('depositModalMonth').value;
+            if (!targetMonth) { alert("Please select a source month."); return; }
+
+            let amtRaw = document.getElementById('depositModalAmount').value;
+            let amount = parseCostExpression(amtRaw);
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid deposit amount.");
+                return;
+            }
+
+            let note = document.getElementById('depositModalNote').value.trim();
+
+            b.balance = fmt(b.balance + amount);
+            logHistory(b.id, b.name, 'ADJUST', `Deposited ${amount}₾ from ${targetMonth} ${currentYear}`);
+
+            if (!state.years[currentYear]) generateYear(currentYear);
+            let itemsArr = state.years[currentYear][targetMonth].items;
+
+            if (!state.tags.includes("Savings")) state.tags.push("Savings");
+            if (!state.tags.includes("Piggy Bank")) state.tags.push("Piggy Bank");
+            if (!state.tags.includes("Piggy Deposit")) state.tags.push("Piggy Deposit");
+
+            let expName = `Deposit to ${b.name}`;
+            let existingExp = itemsArr.find(i => !i.isIncome && i.name === expName && (i.tags.includes("Piggy Bank") || i.tags.includes("Piggy Deposit")));
+            let subNote = note || `Deposit (${new Date().toLocaleDateString([], { month: 'short', day: 'numeric' })})`;
+
+            if (existingExp) {
+                if (!existingExp.subItems) existingExp.subItems = [];
+                existingExp.subItems.push({ name: subNote, cost: amount });
+                existingExp.cost = fmt(existingExp.cost + amount);
+                logHistory(existingExp.id, existingExp.name, 'EDIT', `Added deposit sub-item: ${subNote} (${amount}₾)`);
+            } else {
+                let newExp = {
+                    id: Date.now().toString() + "D",
+                    name: expName,
+                    cost: amount,
+                    qty: 1,
+                    tags: ["Savings", "Piggy Bank", "Piggy Deposit"],
+                    color: b.color || selectedColor,
+                    done: true,
+                    isEditing: false,
+                    isIncome: false,
+                    currency: 'GEL',
+                    subItems: [{ name: subNote, cost: amount }]
+                };
+                itemsArr.push(newExp);
+                logHistory(newExp.id, newExp.name, 'ADD', `Created ${expName} with ${amount}₾`);
+            }
+
+            state.tags.sort((a, b) => a.localeCompare(b));
+            updateTagSelects();
+
+            closeDepositModal();
+            renderExtras();
+            renderBoard();
+            if (activeMonth === targetMonth) renderPageItems();
+            autoSave();
+        }
 
         function piggyDragStart(ev, id) { draggedPiggyId = id; }
-        function piggyDrop(ev, targetId) { ev.preventDefault(); if (draggedPiggyId === targetId || !draggedPiggyId) return; let arr = state.piggyBanks; let dIdx = arr.findIndex(p => p.id === draggedPiggyId); let tIdx = arr.findIndex(p => p.id === targetId); arr.splice(tIdx, 0, arr.splice(dIdx, 1)[0]); draggedPiggyId = null; renderExtras(); autoSave(); }
+        function piggyDrop(ev, targetId) {
+            ev.preventDefault();
+            if (draggedPiggyId === targetId || !draggedPiggyId) return;
+            let arr = state.piggyBanks;
+            let dIdx = arr.findIndex(p => p.id === draggedPiggyId);
+            let tIdx = arr.findIndex(p => p.id === targetId);
+            arr.splice(tIdx, 0, arr.splice(dIdx, 1)[0]);
+            draggedPiggyId = null;
+            renderExtras(); autoSave();
+        }
 
         function addPiggy() {
-            let n = document.getElementById('newPiggyName').value;
+            let n = document.getElementById('newPiggyName').value.trim();
             if (n) {
                 let newId = Date.now().toString();
-                state.piggyBanks.push({ id: newId, name: n, balance: 0, monthlyPlan: null, color: selectedColor, isEditing: false });
-                logHistory(newId, n, 'ADD', `Created Piggy Bank`);
+                let planVal = document.getElementById('newPiggyPlan') ? parseFloat(document.getElementById('newPiggyPlan').value) : null;
+                let monthsVal = document.getElementById('newPiggyMonths') ? parseInt(document.getElementById('newPiggyMonths').value) : null;
+                state.piggyBanks.push({
+                    id: newId,
+                    name: n,
+                    balance: 0,
+                    monthlyPlan: !isNaN(planVal) ? planVal : null,
+                    saveMonths: !isNaN(monthsVal) ? monthsVal : null,
+                    color: selectedColor,
+                    isEditing: false
+                });
+                logHistory(newId, n, 'ADD', `Created Piggy Bank Vault`);
+                document.getElementById('newPiggyName').value = '';
+                if (document.getElementById('newPiggyPlan')) document.getElementById('newPiggyPlan').value = '';
+                if (document.getElementById('newPiggyMonths')) document.getElementById('newPiggyMonths').value = '';
                 renderExtras(); autoSave();
             }
         }
+
         function togglePiggyEdit(id) { state.piggyBanks.find(p => p.id === id).isEditing = true; renderExtras(); }
+
         function savePiggy(id) {
             let b = state.piggyBanks.find(p => p.id === id);
             let oldName = b.name;
-            b.name = document.getElementById(`piggyName-${id}`).value;
+            b.name = document.getElementById(`piggyName-${id}`).value.trim() || oldName;
             let pv = document.getElementById(`piggyPlan-${id}`).value;
             b.monthlyPlan = pv !== "" ? parseFloat(pv) : null;
+            let mv = document.getElementById(`piggyMonths-${id}`).value;
+            b.saveMonths = mv !== "" ? parseInt(mv) : null;
             b.color = document.getElementById(`piggyColor-${id}`).value;
             b.isEditing = false;
             logHistory(id, b.name, 'EDIT', `Updated Vault Settings`);
             renderExtras(); autoSave();
         }
+
         function updatePiggy(id, mult) {
             let amt = parseFloat(document.getElementById(`piggyVal-${id}`).value) || 0;
             let b = state.piggyBanks.find(p => p.id === id);
@@ -1747,6 +2933,7 @@
                 renderExtras(); autoSave();
             }
         }
+
         function deletePiggy(id) {
             if (confirm("Delete this Piggy Bank?")) {
                 let b = state.piggyBanks.find(p => p.id === id);
@@ -1756,122 +2943,348 @@
             }
         }
 
-        function renderNewEntryTags() {
-            let searchVal = (document.getElementById('newEntryTagSearch') ? document.getElementById('newEntryTagSearch').value : '').toLowerCase();
-            let filteredTags = state.tags.filter(t => !searchVal || t.toLowerCase().includes(searchVal));
-            document.getElementById('newEntryTagsContainer').innerHTML = filteredTags.map(t => {
-                let isSel = newEntryTags.includes(t);
-                return `<span class="tag-badge" style="opacity: ${isSel ? 1 : 0.4}; padding: 6px 12px; font-size: 0.9em; margin: 2px;" onclick="toggleNewEntryTag('${t}')">${t}</span>`;
-            }).join('');
-            if (filteredTags.length === 0 && searchVal) {
-                document.getElementById('newEntryTagsContainer').innerHTML = '<span style="color:#aaa; font-size:0.9em;">No tags match "' + searchVal + '"</span>';
+        // ============================================================
+        // Change #5: Loans & Manual Savings Activity Ledger
+        // ============================================================
+        function openLoansModal() {
+            let mSel = document.getElementById('loanReceivedMonth');
+            if (mSel) {
+                let fDate = getFinancialDate();
+                mSel.innerHTML = months.map((m, idx) => `<option value="${m}" ${idx === fDate.monthIdx ? 'selected' : ''}>${m} ${currentYear}</option>`).join('');
             }
+
+            let pSel = document.getElementById('loanTargetPiggy');
+            if (pSel) {
+                pSel.innerHTML = '<option value="">None (Monthly Budget Only)</option>' +
+                    (state.piggyBanks || []).map(p => `<option value="${p.id}">Vault: ${p.name} (Bal: ${fmt(p.balance)}₾)</option>`).join('');
+            }
+
+            let dateInput = document.getElementById('ledgerDate');
+            if (dateInput && !dateInput.value) {
+                dateInput.value = new Date().toISOString().split('T')[0];
+            }
+
+            document.getElementById('loanName').value = '';
+            document.getElementById('loanAmount').value = '';
+            document.getElementById('loanPayback').value = '';
+
+            activeLoansTab = 'loans';
+            switchLoansTab('loans');
+            document.getElementById('loansModal').style.display = 'flex';
         }
-        function toggleNewEntryTag(t) { if (newEntryTags.includes(t)) newEntryTags = newEntryTags.filter(x => x !== t); else newEntryTags.push(t); renderNewEntryTags(); }
 
-        function getActiveItemsArray() { return activeMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][activeMonth].items; }
-        function openMonthPage(month) { activeMonth = month; document.getElementById('dashboardView').style.display = 'none'; document.getElementById('monthView').style.display = 'flex'; if (month === 'LongTerm') { document.getElementById('pageMonthTitle').innerText = "Long Term Plans"; document.getElementById('salaryOverrideContainer').style.display = 'none'; } else { document.getElementById('pageMonthTitle').innerText = `${month} ${currentYear} Planning`; document.getElementById('salaryOverrideContainer').style.display = 'block'; document.getElementById('pageSalary').value = state.years[currentYear][month].salary || ''; } renderPageItems(); }
-        function closeMonthPage() { activeMonth = null; document.getElementById('monthView').style.display = 'none'; document.getElementById('dashboardView').style.display = 'flex'; renderBoard(); renderExtras(); }
-        function setMonthSalary(val) { if (activeMonth !== 'LongTerm') { state.years[currentYear][activeMonth].salary = val === "" ? null : parseFloat(val); renderPageItems(); autoSave(); } }
+        function switchLoansTab(tab) {
+            activeLoansTab = tab;
+            let tabLoans = document.getElementById('loansTabContent');
+            let tabLedger = document.getElementById('ledgerTabContent');
+            let btnLoans = document.getElementById('tabBtnLoans');
+            let btnLedger = document.getElementById('tabBtnLedger');
 
-        function checkAutoTag(val) { if (!val) return; let firstWord = val.trim().split(' ')[0].toLowerCase(); let match = state.tags.find(t => t.toLowerCase() === firstWord); if (match && !newEntryTags.includes(match)) { newEntryTags.push(match); renderNewEntryTags(); } }
-
-        function addItem() {
-            let nameInput = document.getElementById('itemName'); let costInput = document.getElementById('itemCost'); let qtyInput = document.getElementById('itemQty'); let typeInput = document.getElementById('itemType').value; let currInput = document.getElementById('itemCurrency').value;
-            if (!nameInput.value) return;
-            let item = { id: Date.now().toString(), name: nameInput.value, cost: parseFloat(costInput.value) || 0, qty: parseFloat(qtyInput.value) || 1, tags: [...newEntryTags], color: selectedColor, done: false, isEditing: false, isIncome: typeInput === 'income', currency: currInput, subItems: [] };
-            getActiveItemsArray().push(item);
-
-            logHistory(item.id, item.name, 'ADD', `Created at ${item.cost} ${item.currency}`);
-
-            nameInput.value = ''; costInput.value = ''; qtyInput.value = '1'; document.getElementById('itemName').focus(); newEntryTags = []; renderNewEntryTags(); renderPageItems(); autoSave();
+            if (tab === 'loans') {
+                tabLoans.style.display = 'flex';
+                tabLedger.style.display = 'none';
+                btnLoans.classList.add('active');
+                btnLedger.classList.remove('active');
+            } else {
+                tabLoans.style.display = 'none';
+                tabLedger.style.display = 'flex';
+                btnLoans.classList.remove('active');
+                btnLedger.classList.add('active');
+            }
+            renderLoansModal();
         }
 
-        function syncSubItems(id) {
-            let item = getActiveItemsArray().find(i => i.id === id);
-            if (!item || !item.subItems || item.subItems.length === 0) return;
-            let total = 0;
-            item.subItems.forEach((sub, sIdx) => {
-                let nameEl = document.getElementById(`editSubName-${id}-${sIdx}`);
-                let costEl = document.getElementById(`editSubCost-${id}-${sIdx}`);
-                if (nameEl && costEl) {
-                    sub.name = nameEl.value.trim() || sub.name;
-                    let parsed = parseFloat(costEl.value);
-                    sub.cost = isNaN(parsed) ? 0 : parsed;
+        function renderLoansModal() {
+            if (!state.loans) state.loans = [];
+            if (!state.manualLedger) state.manualLedger = [];
+
+            if (activeLoansTab === 'loans') {
+                let active = state.loans.filter(l => !l.paidOut);
+                let paid = state.loans.filter(l => l.paidOut);
+
+                let activeHtml = active.length === 0 ? '<div style="color:#aaa; font-size:0.9em; padding:10px 0;">No active loans currently open.</div>' :
+                    active.map(l => {
+                        let vaultInfo = '';
+                        if (l.piggyBankId) {
+                            let vault = (state.piggyBanks || []).find(p => p.id === l.piggyBankId);
+                            if (vault) vaultInfo = ` · Deposited in ${vault.name}`;
+                        }
+                        return `
+                        <div class="loan-card">
+                            <div style="flex-grow:1;">
+                                <div style="font-weight:bold; font-size:1.1em; color:var(--text);">${l.name}</div>
+                                <div style="font-size:0.85em; color:#aaa; margin-top:2px;">
+                                    Received: <strong>${l.receivedMonth || 'N/A'} ${l.receivedYear || currentYear}</strong>${vaultInfo}
+                                    ${l.paybackSchedule ? ' · <span style="color:#ff9800;">' + l.paybackSchedule + '</span>' : ''}
+                                </div>
+                            </div>
+                            <div style="font-size:1.25em; font-weight:bold; color:#2196f3; white-space:nowrap;">${fmt(l.amount)}₾</div>
+                            <div style="display:flex; gap:6px; flex-shrink:0;">
+                                <button onclick="repayLoan('${l.id}')" style="padding:6px 12px; font-size:0.85em; background:#4caf50; min-height:36px; font-weight:bold;" title="Pay out / repay loan">💳 Pay Out / Repay</button>
+                                <button class="btn-danger" onclick="deleteLoan('${l.id}')" style="padding:6px 10px; font-size:0.85em; min-height:36px;">X</button>
+                            </div>
+                        </div>
+                    `;
+                    }).join('');
+
+                let paidHtml = paid.length === 0 ? '<div style="color:#aaa; font-size:0.9em; padding:10px 0;">No loans have been paid out yet.</div>' :
+                    paid.map(l => `
+                        <div class="loan-card paid">
+                            <div style="flex-grow:1;">
+                                <div style="font-weight:bold; font-size:1.05em;">${l.name}</div>
+                                <div style="font-size:0.82em; color:#aaa; margin-top:2px;">
+                                    Received: ${l.receivedMonth || 'N/A'} · Repaid in: <strong>${l.repaidMonth || l.paidDate || 'Paid'}</strong> · Date: ${l.paidDate || ''}
+                                </div>
+                            </div>
+                            <div style="font-size:1.15em; font-weight:bold; color:#4caf50; white-space:nowrap;">${fmt(l.amount)}₾ ✓</div>
+                            <button class="btn-danger" onclick="deleteLoan('${l.id}')" style="padding:4px 8px; font-size:0.8em; min-height:30px;">X</button>
+                        </div>
+                    `).join('');
+
+                document.getElementById('activeLoansContainer').innerHTML = activeHtml;
+                document.getElementById('paidLoansContainer').innerHTML = paidHtml;
+            } else {
+                // Render Manual Accumulated & Spent Ledger
+                let entries = state.manualLedger;
+                let totAccum = fmt(entries.filter(e => e.type === 'accumulated').reduce((s, e) => s + (e.amount || 0), 0));
+                let totSpent = fmt(entries.filter(e => e.type === 'spent').reduce((s, e) => s + (e.amount || 0), 0));
+                let netBal = fmt(totAccum - totSpent);
+
+                document.getElementById('ledgerKpiBar').innerHTML = `
+                    <div class="stat-card" style="padding:10px 14px;">
+                        <div class="stat-label">Total Accumulated</div>
+                        <div class="stat-value pos">${totAccum}₾</div>
+                    </div>
+                    <div class="stat-card" style="padding:10px 14px;">
+                        <div class="stat-label">Total Spent</div>
+                        <div class="stat-value neg">${totSpent}₾</div>
+                    </div>
+                    <div class="stat-card" style="padding:10px 14px;">
+                        <div class="stat-label">Net Balance</div>
+                        <div class="stat-value ${netBal >= 0 ? 'pos' : 'neg'}">${netBal}₾</div>
+                    </div>
+                `;
+
+                if (entries.length === 0) {
+                    document.getElementById('ledgerEntriesContainer').innerHTML = '<div style="color:#aaa; font-size:0.9em; padding:10px 0;">No manual ledger entries yet. Add one above!</div>';
+                } else {
+                    document.getElementById('ledgerEntriesContainer').innerHTML = entries.map(e => {
+                        let isAccum = e.type === 'accumulated';
+                        return `
+                        <div class="ledger-entry-card" style="border-left: 5px solid ${isAccum ? '#4caf50' : '#f44336'};">
+                            <div style="flex-grow:1;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span class="merge-badge" style="background:${isAccum ? '#4caf50' : '#f44336'};">${isAccum ? 'ACCUMULATED' : 'SPENT'}</span>
+                                    <strong style="font-size:1.05em;">${e.name}</strong>
+                                </div>
+                                <div style="font-size:0.82em; color:#aaa; margin-top:4px;">
+                                    Date: ${e.date || 'N/A'}${e.note ? ' · ' + e.note : ''}
+                                </div>
+                            </div>
+                            <div style="font-size:1.2em; font-weight:bold; color:${isAccum ? '#4caf50' : '#f44336'}; white-space:nowrap;">
+                                ${isAccum ? '+' : '-'}${fmt(e.amount)}₾
+                            </div>
+                            <button class="btn-danger" onclick="deleteLedgerEntry('${e.id}')" style="padding:4px 8px; font-size:0.85em; min-height:32px;">X</button>
+                        </div>
+                    `;
+                    }).join('');
                 }
-                total += sub.cost;
-            });
-            item.cost = total;
-            let mainCostEl = document.getElementById(`editCost-${id}`);
-            if (mainCostEl) mainCostEl.value = total;
-        }
-
-        function addSubItem(itemId) {
-            syncSubItems(itemId);
-            let item = getActiveItemsArray().find(i => i.id === itemId);
-            if (!item) return;
-            if (!item.subItems) item.subItems = [];
-
-            let n = document.getElementById(`subName-${itemId}`).value.trim();
-            let cStr = document.getElementById(`subCost-${itemId}`).value;
-            let c = parseFloat(cStr);
-            if (isNaN(c)) c = 0;
-
-            if (n) {
-                item.subItems.push({ name: n, cost: c });
-                item.cost = item.subItems.reduce((acc, s) => acc + s.cost, 0);
-
-                logHistory(itemId, item.name, 'EDIT', `Added split sub-item: ${n} (${c})`);
-                renderPageItems();
-                autoSave();
             }
         }
 
-        function deleteSubItem(itemId, subIdx) {
-            syncSubItems(itemId);
-            let item = getActiveItemsArray().find(i => i.id === itemId);
-            if (!item || !item.subItems) return;
+        function addLoan() {
+            let name = document.getElementById('loanName').value.trim();
+            let amount = parseCostExpression(document.getElementById('loanAmount').value);
+            let targetMonth = document.getElementById('loanReceivedMonth').value;
+            let targetPiggyId = document.getElementById('loanTargetPiggy').value;
+            let paybackSchedule = document.getElementById('loanPayback').value.trim();
 
-            let removed = item.subItems.splice(subIdx, 1)[0];
-            item.cost = item.subItems.length > 0 ? item.subItems.reduce((acc, s) => acc + s.cost, 0) : 0;
+            if (!name) { alert("Please enter loan description / lender name."); return; }
+            if (!amount || amount <= 0) { alert("Please enter a valid loan amount."); return; }
+            if (!targetMonth) { alert("Please select a month to receive the loan into."); return; }
 
-            logHistory(itemId, item.name, 'EDIT', `Removed split sub-item: ${removed.name}`);
-            renderPageItems();
+            let loanId = Date.now().toString() + Math.random().toString(36).substr(2, 4);
+
+            let newLoan = {
+                id: loanId,
+                name: name,
+                amount: amount,
+                receivedMonth: targetMonth,
+                receivedYear: currentYear,
+                piggyBankId: targetPiggyId || null,
+                paybackSchedule: paybackSchedule,
+                paidOut: false,
+                paidDate: null,
+                repaidMonth: null
+            };
+
+            state.loans.push(newLoan);
+
+            // Change #5: User gets money in that month as income
+            if (!state.years[currentYear]) generateYear(currentYear);
+            let itemsArr = state.years[currentYear][targetMonth].items;
+            if (!state.tags.includes("Loan")) state.tags.push("Loan");
+
+            let incItem = {
+                id: Date.now().toString() + "L",
+                name: "Loan: " + name,
+                cost: amount,
+                qty: 1,
+                tags: ["Loan"],
+                color: "#2196f3",
+                done: true,
+                isEditing: false,
+                isIncome: true,
+                currency: 'GEL',
+                subItems: []
+            };
+            itemsArr.push(incItem);
+
+            // If piggy bank selected, also deposit into it
+            if (targetPiggyId) {
+                let p = state.piggyBanks.find(x => x.id === targetPiggyId);
+                if (p) {
+                    p.balance = fmt(p.balance + amount);
+                    logHistory(p.id, p.name, 'ADJUST', `Loan deposited ${amount}₾ into ${p.name}`);
+                }
+            }
+
+            logHistory(incItem.id, incItem.name, 'ADD', `Loan received in ${targetMonth} (${amount}₾)`);
+
+            document.getElementById('loanName').value = '';
+            document.getElementById('loanAmount').value = '';
+            document.getElementById('loanPayback').value = '';
+
+            renderLoansModal();
+            renderBoard();
+            renderExtras();
+            if (activeMonth === targetMonth) renderPageItems();
             autoSave();
         }
 
-        function adjustEditCost(id, mult) {
-            let costInput = document.getElementById(`editCost-${id}`);
-            let adjInput = document.getElementById(`adjustCost-${id}`);
-            let item = getActiveItemsArray().find(i => i.id === id);
+        function repayLoan(id) {
+            let loan = state.loans.find(l => l.id === id);
+            if (!loan) return;
 
-            if (item && item.subItems && item.subItems.length > 0) {
-                alert("This item has sub-items attached. Please add or adjust sub-items instead of modifying the main sum.");
-                adjInput.value = '';
+            let fDate = getFinancialDate();
+            let defaultMonth = months[fDate.monthIdx];
+            let repMonth = prompt(`Repay loan "${loan.name}" (${loan.amount}₾).\nEnter month name to record repayment expense:`, defaultMonth);
+            if (repMonth === null) return;
+            repMonth = repMonth.trim();
+            if (!months.includes(repMonth)) {
+                alert(`Invalid month "${repMonth}". Please enter a valid month like January, February, etc.`);
                 return;
             }
 
-            let cost = parseFloat(costInput.value) || 0; let adj = parseFloat(adjInput.value) || 0;
-            if (adj > 0) {
-                let newCost = fmt(cost + (adj * mult));
-                costInput.value = newCost;
+            // Record repayment expense in that month
+            if (!state.years[currentYear]) generateYear(currentYear);
+            let itemsArr = state.years[currentYear][repMonth].items;
+            if (!state.tags.includes("Loan Repay")) state.tags.push("Loan Repay");
 
-                let itemName = document.getElementById(`editName-${id}`).value;
-                let verb = mult > 0 ? "Added" : "Reduced";
-                logHistory(id, itemName, 'ADJUST', `${verb} ${adj}. New cost: ${newCost}`);
+            let expItem = {
+                id: Date.now().toString() + "R",
+                name: "Loan Repayment: " + loan.name,
+                cost: loan.amount,
+                qty: 1,
+                tags: ["Loan Repay", "Loan"],
+                color: "#f44336",
+                done: true,
+                isEditing: false,
+                isIncome: false,
+                currency: 'GEL',
+                subItems: []
+            };
+            itemsArr.push(expItem);
 
-                adjInput.value = '';
+            // If linked to piggy bank, deduct from it
+            if (loan.piggyBankId) {
+                let p = state.piggyBanks.find(x => x.id === loan.piggyBankId);
+                if (p) {
+                    if (confirm(`Deduct repayment of ${loan.amount}₾ from vault "${p.name}"?`)) {
+                        p.balance = fmt(p.balance - loan.amount);
+                        logHistory(p.id, p.name, 'ADJUST', `Loan repayment deducted ${loan.amount}₾ from ${p.name}`);
+                    }
+                }
             }
+
+            loan.paidOut = true;
+            loan.paidDate = new Date().toLocaleDateString();
+            loan.repaidMonth = `${repMonth} ${currentYear}`;
+
+            logHistory(expItem.id, expItem.name, 'ADD', `Paid out loan of ${loan.amount}₾ in ${repMonth}`);
+
+            renderLoansModal();
+            renderBoard();
+            renderExtras();
+            if (activeMonth === repMonth) renderPageItems();
+            autoSave();
         }
 
+        function deleteLoan(id) {
+            if (!confirm("Are you sure you want to delete this loan record?")) return;
+            let loan = state.loans.find(l => l.id === id);
+            if (loan) logHistory(id, loan.name, 'DELETE', `Deleted loan record (${loan.amount}₾)`);
+            state.loans = state.loans.filter(l => l.id !== id);
+            renderLoansModal();
+            autoSave();
+        }
+
+        function addLedgerEntry() {
+            let type = document.getElementById('ledgerType').value;
+            let desc = document.getElementById('ledgerDesc').value.trim();
+            let amt = parseCostExpression(document.getElementById('ledgerAmount').value);
+            let date = document.getElementById('ledgerDate').value || new Date().toISOString().split('T')[0];
+            let note = document.getElementById('ledgerNote').value.trim();
+
+            if (!desc) { alert("Please enter description for this record."); return; }
+            if (!amt || amt <= 0) { alert("Please enter a valid amount."); return; }
+
+            let entry = {
+                id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
+                type: type,
+                name: desc,
+                amount: amt,
+                date: date,
+                note: note
+            };
+
+            if (!state.manualLedger) state.manualLedger = [];
+            state.manualLedger.unshift(entry);
+
+            logHistory(entry.id, desc, 'ADD', `Manual ledger: ${type} ${amt}₾`);
+
+            document.getElementById('ledgerDesc').value = '';
+            document.getElementById('ledgerAmount').value = '';
+            document.getElementById('ledgerNote').value = '';
+
+            renderLoansModal();
+            autoSave();
+        }
+
+        function deleteLedgerEntry(id) {
+            if (!confirm("Delete this manual ledger record?")) return;
+            let entry = (state.manualLedger || []).find(e => e.id === id);
+            if (entry) logHistory(id, entry.name, 'DELETE', `Deleted manual ledger entry`);
+            state.manualLedger = state.manualLedger.filter(e => e.id !== id);
+            renderLoansModal();
+            autoSave();
+        }
+
+        // ============================================================
+        // Tag-First View in Dedicated Month Page (Requirements 3 & 7)
+        // Every tag is displayed, sorted by spend & frequency, searchable
+        // ============================================================
         function renderPageItems() {
             if (!activeMonth) return;
-            let arr = getActiveItemsArray(); let items = [...arr]; let sortType = document.getElementById('pageSort').value;
+            let arr = getActiveItemsArray();
+            let items = [...arr];
+            let sortType = document.getElementById('pageSort').value;
             if (sortType === 'costDesc') items.sort((a, b) => toGEL(b.cost * b.qty, b.currency) - toGEL(a.cost * a.qty, a.currency));
             if (sortType === 'costAsc') items.sort((a, b) => toGEL(a.cost * a.qty, a.currency) - toGEL(b.cost * b.qty, b.currency));
             if (sortType === 'tag') items.sort((a, b) => { let tA = a.tags[0] || ''; let tB = b.tags[0] || ''; return tA.localeCompare(tB); });
 
-            let incomes = items.filter(i => i.isIncome); let expenses = items.filter(i => !i.isIncome);
+            let incomes = items.filter(i => i.isIncome);
+            let expenses = items.filter(i => !i.isIncome);
             let plannedIncome = fmt(incomes.reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0));
             let actualIncome = fmt(incomes.filter(i => i.done).reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0));
             let plannedSpent = fmt(expenses.reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0));
@@ -1881,7 +3294,8 @@
                 document.getElementById('pageSummaryBar').innerHTML = `<span>Total Planned Costs: <strong>${plannedSpent}₾</strong> ${plannedIncome > 0 ? `(+${plannedIncome}₾ Inc)` : ''}</span><span>Finished (Paid): <strong class="pos">${actualSpent}₾</strong></span>`;
             } else {
                 let sal = state.years[currentYear][activeMonth].salary !== null ? state.years[currentYear][activeMonth].salary : state.years[currentYear].yearlySalary;
-                let plannedRem = fmt(sal + plannedIncome - plannedSpent); let actualRem = fmt(sal + actualIncome - actualSpent);
+                let plannedRem = fmt(sal + plannedIncome - plannedSpent);
+                let actualRem = fmt(sal + actualIncome - actualSpent);
                 let str = plannedIncome > 0 ? `Budget: ${sal} + ${plannedIncome} - ${plannedSpent} = ` : `Planned: ${sal} - ${plannedSpent} = `;
                 document.getElementById('pageSummaryBar').innerHTML = `<span>${str} <strong class="${plannedRem >= 0 ? 'pos' : 'neg'}">${plannedRem}₾</strong></span><span>Real Remaining: <strong class="${actualRem >= 0 ? 'pos' : 'neg'}">${actualRem}₾</strong></span>`;
             }
@@ -1946,16 +3360,32 @@
                             <div style="display:flex; justify-content:space-between; background:var(--bg); padding:6px 8px; border-radius:4px; border:1px solid var(--border); gap:10px; align-items:center;">
                                 <input type="text" id="editSubName-${item.id}-${sIdx}" value="${sub.name}" oninput="syncSubItems('${item.id}')" style="flex:1; padding:6px; min-width:100px;">
                                 <div style="display:flex; gap:10px; align-items:center;">
-                                    <input type="text" class="num-input" id="editSubCost-${item.id}-${sIdx}" value="${sub.cost}" oninput="syncSubItems('${item.id}')" style="width:70px; padding:6px; text-align:right;">
+                                    <input type="text" class="math-input" id="editSubCost-${item.id}-${sIdx}" value="${sub.cost}" oninput="syncSubItems('${item.id}')" onblur="this.value=parseCostExpression(this.value); syncSubItems('${item.id}');" title="Cost or math formula" style="width:80px; padding:6px; text-align:right;">
                                     <button class="btn-danger" style="padding:6px 10px; font-size:0.9em; font-weight:bold;" onclick="deleteSubItem('${item.id}', ${sIdx})">X</button>
                                 </div>
                             </div>
                         `).join('')}
                     </div>
-                    <div style="display:flex; gap:5px; flex-wrap: wrap;">
-                        <input type="text" id="subName-${item.id}" placeholder="Sub-item name" style="flex:1; min-width: 120px;" onkeydown="if(event.key==='Enter') { addSubItem('${item.id}'); event.stopPropagation(); event.preventDefault(); }">
-                        <input type="text" class="num-input" id="subCost-${item.id}" placeholder="Cost" style="width:70px;" onkeydown="if(event.key==='Enter') { addSubItem('${item.id}'); event.stopPropagation(); event.preventDefault(); }">
-                        <button onclick="addSubItem('${item.id}')" style="padding: 8px 12px; background: #2196f3; flex-shrink: 0; white-space: nowrap;">Add</button>
+                    <div style="display:flex; gap:6px; flex-wrap: wrap; align-items: center;">
+                        <input type="text" id="subName-${item.id}" placeholder="Sub-item name" style="flex:1; min-width: 120px; padding: 8px;" onkeydown="if(event.key==='Enter') { addSubItem('${item.id}'); event.stopPropagation(); event.preventDefault(); }">
+                        <div style="position:relative; display:inline-flex; align-items:center;">
+                            <input type="text" class="math-input" id="subCost-${item.id}" placeholder="Cost (e.g. 10+20)" title="Enter numbers or formula to sum (e.g. 15+20+35 or 15 20 35)" style="width:130px; padding:8px 30px 8px 8px;" oninput="updateSubCostPreview('${item.id}')" onkeydown="if(event.key==='Enter') { addSubItem('${item.id}'); event.stopPropagation(); event.preventDefault(); }">
+                            <button type="button" title="Multi-number Sum Calculator" onclick="toggleSumHelper('${item.id}')" style="position:absolute; right:2px; padding:3px 6px; font-size:0.9em; background:transparent; border:none; cursor:pointer; color:var(--accent); font-weight:bold;">∑</button>
+                        </div>
+                        <button onclick="addSubItem('${item.id}')" style="padding: 8px 14px; background: #2196f3; flex-shrink: 0; white-space: nowrap; font-weight:bold;">Add</button>
+                    </div>
+                    <div id="subCostPreview-${item.id}" style="font-size:0.85em; color:var(--accent); font-weight:bold; margin-top:4px; display:none;"></div>
+                    <div id="sumHelperDrawer-${item.id}" style="display:none; margin-top:8px; padding:10px; background:rgba(0,0,0,0.25); border:1px solid var(--border); border-radius:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                            <span style="font-size:0.85em; font-weight:bold; color:var(--text);">🔢 Sum Multiple Numbers</span>
+                            <button type="button" class="btn-secondary" style="padding:2px 6px; font-size:0.75em;" onclick="toggleSumHelper('${item.id}')">Close</button>
+                        </div>
+                        <div style="font-size:0.75em; color:#aaa; margin-bottom:6px;">Type or paste lots of numbers below (separated by spaces, +, commas, or new lines):</div>
+                        <textarea id="sumHelperText-${item.id}" placeholder="12.50&#10;45&#10;19.99&#10;30" style="width:100%; height:60px; font-family:monospace; font-size:0.85em; padding:6px; background:var(--bg); border:1px solid var(--border); border-radius:4px; color:var(--text); resize:vertical;" oninput="updateSumHelperPreview('${item.id}')"></textarea>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                            <span id="sumHelperStats-${item.id}" style="font-weight:bold; color:var(--accent); font-size:0.9em;">Total: 0.00₾ (0 numbers)</span>
+                            <button type="button" style="padding:5px 12px; font-size:0.85em; background:var(--accent); font-weight:bold;" onclick="applySumHelperToSubCost('${item.id}')">Insert Sum</button>
+                        </div>
                     </div>
                 </div>
                 
@@ -1993,52 +3423,449 @@
             <div class="page-item-card ${item.done ? 'done' : ''}" style="border-color: ${item.color}"
                  onclick="toggleEditItem('${item.id}')" draggable="true" ondragstart="pageItemDragStart(event, '${item.id}')" 
                  ondragover="event.preventDefault()" ondrop="pageItemDrop(event, '${item.id}')">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <strong style="font-size: 1.2em; color: ${item.isIncome ? 'var(--accent)' : 'inherit'}">${item.isIncome ? '➕' : ''} ${item.name}</strong>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <strong style="font-size: 1.15em; color: ${item.isIncome ? 'var(--accent)' : 'inherit'}">${item.isIncome ? '➕' : ''} ${item.name}</strong>
                     <div>
                         <button class="btn-danger" style="padding: 4px 8px;" onclick="deleteItem('${item.id}'); event.stopPropagation();">X</button>
                     </div>
                 </div>
-                <div style="font-size: 1.1em; margin-bottom: 10px;">${item.qty}x ${fmtCurr(item.cost, item.currency)} = <b style="font-size: 1.2em;">${fmtCurr(item.qty * item.cost, item.currency)}</b> ${conversionHtml}</div>
+                <div style="font-size: 1.05em; margin-bottom: 8px;">${item.qty}x ${fmtCurr(item.cost, item.currency)} = <b style="font-size: 1.15em;">${fmtCurr(item.qty * item.cost, item.currency)}</b> ${conversionHtml}</div>
                 
                 ${hasSubItems ? `
-                    <div style="margin: 10px 0; background: var(--bg); padding: 10px; border-radius: 6px; border: 1px solid var(--border);">
-                        <div style="font-size: 0.8em; color: var(--accent); margin-bottom: 6px; font-weight:bold; letter-spacing:1px; text-transform: uppercase;">Included Items:</div>
-                        <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; color: var(--text);">
-                            ${item.subItems.map(s => `<li style="margin-bottom:3px;">${s.name} - <strong>${s.cost}</strong></li>`).join('')}
+                    <div style="margin: 8px 0; background: var(--bg); padding: 8px; border-radius: 6px; border: 1px solid var(--border);">
+                        <div style="font-size: 0.78em; color: var(--accent); margin-bottom: 4px; font-weight:bold; letter-spacing:1px; text-transform: uppercase;">Included Sub-Items:</div>
+                        <ul style="margin: 0; padding-left: 18px; font-size: 0.88em; color: var(--text);">
+                            ${item.subItems.map(s => `<li style="margin-bottom:2px;">${s.name} - <strong>${s.cost}₾</strong></li>`).join('')}
                         </ul>
                     </div>
                 ` : ''}
 
-                <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
                     <div style="display:flex; gap:4px; flex-wrap:wrap;">${item.tags.map(t => `<span class="tag-badge" onclick="event.stopPropagation();">${t}</span>`).join('')}</div>
-                    <label style="cursor:pointer;" onclick="event.stopPropagation();"><input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleDone('${activeMonth}', '${item.id}');"> Mark Done</label>
+                    <label style="cursor:pointer; font-size:0.9em;" onclick="event.stopPropagation();"><input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleDone('${activeMonth}', '${item.id}');"> Done</label>
                 </div>
             </div>`;
                 }
             };
 
             let container = document.getElementById('pageItemsContainer');
-            container.className = 'page-content ' + state.settings.pageLayout;
-            let incHtml = incomes.map(renderCard).join('');
-            let expHtml = expenses.map(renderCard).join('');
+            let layoutClass = state.settings.pageLayout || 'view-grid';
 
-            container.innerHTML = `
-        ${incomes.length > 0 ? `<div class="page-section-title" style="color:var(--accent);">➕ Income</div>${incHtml}` : ''}
-        ${expenses.length > 0 ? `<div class="page-section-title">➖ Expenses</div>${expHtml}` : ''}
-    `;
+            // Change #3: Gather EVERY tag created by the user + Untagged
+            let tagMap = {};
+            (state.tags || []).forEach(t => {
+                tagMap[t] = [];
+            });
+
+            // Put items in their tag buckets
+            items.forEach(item => {
+                if (item.tags && item.tags.length > 0) {
+                    item.tags.forEach(t => {
+                        if (!tagMap[t]) tagMap[t] = [];
+                        tagMap[t].push(item);
+                    });
+                } else {
+                    if (!tagMap['__untagged__']) tagMap['__untagged__'] = [];
+                    tagMap['__untagged__'].push(item);
+                }
+            });
+
+            // Compute score for sorting tags
+            // "tags which have most use and which have most money spent should be on the top, and which are rare should be on bottom"
+            function computeTagScore(tagKey) {
+                let tagItems = tagMap[tagKey] || [];
+                let monthSpend = tagItems.filter(i => !i.isIncome).reduce((s, i) => s + toGEL(i.cost * i.qty, i.currency), 0);
+                let monthCount = tagItems.length;
+                let yearSpend = 0;
+                let yearCount = 0;
+
+                if (state.years[currentYear]) {
+                    months.forEach(m => {
+                        let md = state.years[currentYear][m];
+                        if (md && md.items) {
+                            md.items.forEach(i => {
+                                if (tagKey === '__untagged__') {
+                                    if (!i.tags || i.tags.length === 0) {
+                                        yearCount++;
+                                        if (!i.isIncome) yearSpend += toGEL(i.cost * i.qty, i.currency);
+                                    }
+                                } else if (i.tags && i.tags.includes(tagKey)) {
+                                    yearCount++;
+                                    if (!i.isIncome) yearSpend += toGEL(i.cost * i.qty, i.currency);
+                                }
+                            });
+                        }
+                    });
+                }
+                return { monthSpend, monthCount, yearSpend, yearCount };
+            }
+
+            let allTagKeys = Object.keys(tagMap);
+            let tagScores = {};
+            allTagKeys.forEach(t => { tagScores[t] = computeTagScore(t); });
+
+            // Sort:
+            // 1. Tags with expenses/items in this month first (by monthSpend DESC, then monthCount DESC)
+            // 2. Tags with 0 in this month, by yearSpend DESC, then yearCount DESC
+            // 3. Rare / never used tags at bottom (alphabetical)
+            allTagKeys.sort((a, b) => {
+                let sa = tagScores[a];
+                let sb = tagScores[b];
+                // In current month
+                if (sb.monthSpend !== sa.monthSpend) return sb.monthSpend - sa.monthSpend;
+                if (sb.monthCount !== sa.monthCount) return sb.monthCount - sa.monthCount;
+                // In year
+                if (sb.yearSpend !== sa.yearSpend) return sb.yearSpend - sa.yearSpend;
+                if (sb.yearCount !== sa.yearCount) return sb.yearCount - sa.yearCount;
+                if (a === '__untagged__') return 1;
+                if (b === '__untagged__') return -1;
+                return a.localeCompare(b);
+            });
+
+            // Filter by search input
+            let searchVal = (document.getElementById('tagFilterSearch') ? document.getElementById('tagFilterSearch').value : '').toLowerCase().trim();
+            let displayTags = allTagKeys;
+            if (searchVal) {
+                displayTags = displayTags.filter(t => {
+                    let displayName = t === '__untagged__' ? 'untagged' : t.toLowerCase();
+                    return displayName.includes(searchVal);
+                });
+            }
+
+            let countSpan = document.getElementById('tagFilterCount');
+            if (countSpan) {
+                countSpan.innerText = `Showing ${displayTags.length} of ${allTagKeys.length} tags`;
+            }
+
+            if (displayTags.length === 0) {
+                container.innerHTML = `<div style="color:#aaa; text-align:center; padding:40px;">No tags match "${searchVal}". Add a new tag via the Tags menu!</div>`;
+                return;
+            }
+
+            let html = '';
+            displayTags.forEach(tagKey => {
+                let isUntagged = tagKey === '__untagged__';
+                let displayName = isUntagged ? 'Untagged Entries' : tagKey;
+                let tagItems = tagMap[tagKey] || [];
+                let hasItems = tagItems.length > 0;
+                let tagScore = tagScores[tagKey];
+                let tagTotal = fmt(tagScore.monthSpend);
+                let doneCount = tagItems.filter(i => i.done).length;
+                let secId = 'tagsec-' + tagKey.replace(/[^a-zA-Z0-9]/g, '_');
+
+                let tagIdx = state.tags.indexOf(tagKey);
+                let tagColor = isUntagged ? '#666' : (presetColors[tagIdx % presetColors.length] || '#4caf50');
+
+                // Determine default collapsed state:
+                // If user toggled all, respect that;
+                // Otherwise: if searching, expand; if has items, expand; if 0 items, collapse.
+                let isCollapsed = false;
+                if (allSectionsExpanded !== null) {
+                    isCollapsed = !allSectionsExpanded;
+                } else if (searchVal) {
+                    isCollapsed = false;
+                } else {
+                    isCollapsed = !hasItems;
+                }
+
+                let itemsHtml = tagItems.map(renderCard).join('');
+                let doneBadge = doneCount > 0 ? `<span style="color:#4caf50; font-size:0.85em; font-weight:bold;">✓ ${doneCount} done</span>` : '';
+
+                html += `
+                    <div class="tag-section ${hasItems ? 'has-items' : 'empty-tag'}" id="${secId}">
+                        <div class="tag-section-header ${!isCollapsed ? 'is-open' : ''}" onclick="toggleTagSection('${secId}')">
+                            <div class="tag-sec-left">
+                                <span class="tag-badge-large" style="background:${tagColor};">🏷️ ${displayName}</span>
+                                <span class="tag-item-count">${tagItems.length} item${tagItems.length !== 1 ? 's' : ''}</span>
+                            </div>
+                            <div class="tag-sec-right">
+                                <span class="tag-sec-total" style="color:${tagTotal > 0 ? 'var(--text)' : '#777'};">${tagTotal}₾</span>
+                                ${doneBadge}
+                                <button type="button" class="btn-secondary" style="padding:4px 10px; font-size:0.8em; min-height:30px;" onclick="event.stopPropagation(); focusTagQuickAdd('${secId}');" title="Add item into ${displayName}">+ Add</button>
+                                <span class="tag-sec-chevron" id="${secId}-chev" style="${isCollapsed ? 'transform:rotate(-90deg);' : ''}">▼</span>
+                            </div>
+                        </div>
+                        <div class="tag-section-body ${layoutClass}" id="${secId}-body" style="${isCollapsed ? 'display:none;' : ''}">
+                            <!-- Inline Quick Add Row directly in tag (Requirement 3) -->
+                            <div class="tag-quick-add-row" onclick="event.stopPropagation()">
+                                <input type="text" id="quickName-${secId}" placeholder="What did you buy/spend in ${displayName}? (e.g. bag)" onkeydown="checkTagQuickEnter(event, '${tagKey.replace(/'/g, "\\'")}', '${secId}')">
+                                <input type="text" class="num-input math-input" id="quickCost-${secId}" placeholder="Cost ₾ (e.g. 10)" style="width:110px;" onkeydown="checkTagQuickEnter(event, '${tagKey.replace(/'/g, "\\'")}', '${secId}')">
+                                <select id="quickType-${secId}" style="width:105px;">
+                                    <option value="expense">➖ Expense</option>
+                                    <option value="income">➕ Income</option>
+                                </select>
+                                <button onclick="addQuickItemToTag('${tagKey.replace(/'/g, "\\'")}', '${secId}')">+ Add</button>
+                            </div>
+
+                            ${itemsHtml}
+                            ${!hasItems ? `<div class="tag-empty-notice">No entries under ${displayName} for this month. Type in the box above to add!</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
         }
 
-        function toggleEditItem(id) { let item = getActiveItemsArray().find(i => i.id === id); if (item) { item.isEditing = !item.isEditing; renderPageItems(); } }
+        function toggleTagSection(secId) {
+            let body = document.getElementById(secId + '-body');
+            let chev = document.getElementById(secId + '-chev');
+            let header = document.querySelector(`#${secId} .tag-section-header`);
+            if (!body) return;
+            let isHidden = body.style.display === 'none';
+            body.style.display = isHidden ? '' : 'none';
+            if (chev) chev.style.transform = isHidden ? '' : 'rotate(-90deg)';
+            if (header) header.classList.toggle('is-open', isHidden);
+        }
+
+        function toggleAllTagSections() {
+            if (allSectionsExpanded === null || allSectionsExpanded === false) {
+                allSectionsExpanded = true;
+            } else {
+                allSectionsExpanded = false;
+            }
+            let bodies = document.querySelectorAll('.tag-section-body');
+            let chevs = document.querySelectorAll('.tag-sec-chevron');
+            let headers = document.querySelectorAll('.tag-section-header');
+
+            bodies.forEach(b => b.style.display = allSectionsExpanded ? '' : 'none');
+            chevs.forEach(c => c.style.transform = allSectionsExpanded ? '' : 'rotate(-90deg)');
+            headers.forEach(h => h.classList.toggle('is-open', allSectionsExpanded));
+        }
+
+        function focusTagQuickAdd(secId) {
+            let body = document.getElementById(secId + '-body');
+            let chev = document.getElementById(secId + '-chev');
+            let header = document.querySelector(`#${secId} .tag-section-header`);
+            if (body && body.style.display === 'none') {
+                body.style.display = '';
+                if (chev) chev.style.transform = '';
+                if (header) header.classList.add('is-open');
+            }
+            let inp = document.getElementById(`quickName-${secId}`);
+            if (inp) inp.focus();
+        }
+
+        function checkTagQuickEnter(event, tagKey, secId) {
+            if (event.key === 'Enter') {
+                addQuickItemToTag(tagKey, secId);
+                event.preventDefault();
+            }
+        }
+
+        function addQuickItemToTag(tagKey, secId) {
+            let nameInp = document.getElementById(`quickName-${secId}`);
+            let costInp = document.getElementById(`quickCost-${secId}`);
+            let typeInp = document.getElementById(`quickType-${secId}`);
+
+            if (!nameInp || !costInp) return;
+            let nameVal = nameInp.value.trim();
+            let costVal = parseCostExpression(costInp.value);
+            let isInc = typeInp ? typeInp.value === 'income' : false;
+
+            if (!nameVal) { alert("Please enter an item name."); return; }
+            if (isNaN(costVal) || costVal <= 0) { alert("Please enter a valid amount."); return; }
+
+            let tagsArr = tagKey === '__untagged__' ? [] : [tagKey];
+
+            let item = {
+                id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
+                name: nameVal,
+                cost: costVal,
+                qty: 1,
+                tags: tagsArr,
+                color: selectedColor,
+                done: false,
+                isEditing: false,
+                isIncome: isInc,
+                currency: 'GEL',
+                subItems: []
+            };
+
+            getActiveItemsArray().push(item);
+            logHistory(item.id, item.name, 'ADD', `Created at ${costVal} GEL under tag [${tagKey}]`);
+
+            nameInp.value = '';
+            costInp.value = '';
+
+            renderPageItems();
+            autoSave();
+
+            // Refocus input for fast repeated entries
+            setTimeout(() => {
+                let refocused = document.getElementById(`quickName-${secId}`);
+                if (refocused) refocused.focus();
+            }, 50);
+        }
+
+        function getActiveItemsArray() {
+            return activeMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][activeMonth].items;
+        }
+
+        function openMonthPage(month) {
+            activeMonth = month;
+            allSectionsExpanded = null;
+            document.getElementById('dashboardView').style.display = 'none';
+            document.getElementById('monthView').style.display = 'flex';
+            if (month === 'LongTerm') {
+                document.getElementById('pageMonthTitle').innerText = "Long Term Plans";
+                document.getElementById('salaryOverrideContainer').style.display = 'none';
+            } else {
+                document.getElementById('pageMonthTitle').innerText = `${month} ${currentYear} Planning`;
+                document.getElementById('salaryOverrideContainer').style.display = 'block';
+                document.getElementById('pageSalary').value = state.years[currentYear][month].salary || '';
+            }
+            if (document.getElementById('tagFilterSearch')) document.getElementById('tagFilterSearch').value = '';
+            renderPageItems();
+        }
+
+        function closeMonthPage() {
+            activeMonth = null;
+            document.getElementById('monthView').style.display = 'none';
+            document.getElementById('dashboardView').style.display = 'flex';
+            renderBoard();
+            renderExtras();
+        }
+
+        function setMonthSalary(val) {
+            if (activeMonth !== 'LongTerm') {
+                state.years[currentYear][activeMonth].salary = val === "" ? null : parseFloat(val);
+                renderPageItems();
+                autoSave();
+            }
+        }
+
+        function checkAutoTag(val) {
+            if (!val) return;
+            let firstWord = val.trim().split(' ')[0].toLowerCase();
+            let match = state.tags.find(t => t.toLowerCase() === firstWord);
+            if (match && !newEntryTags.includes(match)) {
+                newEntryTags.push(match);
+                renderNewEntryTags();
+            }
+        }
+
+        function addItem() {
+            let nameInput = document.getElementById('itemName');
+            let costInput = document.getElementById('itemCost');
+            let qtyInput = document.getElementById('itemQty');
+            let typeInput = document.getElementById('itemType').value;
+            let currInput = document.getElementById('itemCurrency').value;
+
+            if (!nameInput.value.trim()) return;
+            let item = {
+                id: Date.now().toString(),
+                name: nameInput.value.trim(),
+                cost: parseCostExpression(costInput.value),
+                qty: parseFloat(qtyInput.value) || 1,
+                tags: [...newEntryTags],
+                color: selectedColor,
+                done: false,
+                isEditing: false,
+                isIncome: typeInput === 'income',
+                currency: currInput,
+                subItems: []
+            };
+            getActiveItemsArray().push(item);
+
+            logHistory(item.id, item.name, 'ADD', `Created at ${item.cost} ${item.currency}`);
+
+            nameInput.value = '';
+            costInput.value = '';
+            qtyInput.value = '1';
+            document.getElementById('itemName').focus();
+            newEntryTags = [];
+            renderNewEntryTags();
+            renderPageItems();
+            autoSave();
+        }
+
+        function syncSubItems(id) {
+            let item = getActiveItemsArray().find(i => i.id === id);
+            if (!item || !item.subItems || item.subItems.length === 0) return;
+            let total = 0;
+            item.subItems.forEach((sub, sIdx) => {
+                let nameEl = document.getElementById(`editSubName-${id}-${sIdx}`);
+                let costEl = document.getElementById(`editSubCost-${id}-${sIdx}`);
+                if (nameEl && costEl) {
+                    sub.name = nameEl.value.trim() || sub.name;
+                    let parsed = parseCostExpression(costEl.value);
+                    sub.cost = parsed;
+                }
+                total += sub.cost;
+            });
+            item.cost = fmt(total);
+            let mainCostEl = document.getElementById(`editCost-${id}`);
+            if (mainCostEl) mainCostEl.value = total;
+        }
+
+        function addSubItem(itemId) {
+            syncSubItems(itemId);
+            let item = getActiveItemsArray().find(i => i.id === itemId);
+            if (!item) return;
+            if (!item.subItems) item.subItems = [];
+
+            let n = document.getElementById(`subName-${itemId}`).value.trim();
+            let cStr = document.getElementById(`subCost-${itemId}`).value;
+            let c = parseCostExpression(cStr);
+
+            if (n) {
+                item.subItems.push({ name: n, cost: c });
+                item.cost = fmt(item.subItems.reduce((acc, s) => acc + s.cost, 0));
+                logHistory(itemId, item.name, 'EDIT', `Added split sub-item: ${n} (${c})`);
+                renderPageItems();
+                autoSave();
+            }
+        }
+
+        function deleteSubItem(itemId, subIdx) {
+            syncSubItems(itemId);
+            let item = getActiveItemsArray().find(i => i.id === itemId);
+            if (!item || !item.subItems) return;
+
+            let removed = item.subItems.splice(subIdx, 1)[0];
+            item.cost = item.subItems.length > 0 ? item.subItems.reduce((acc, s) => acc + s.cost, 0) : 0;
+            logHistory(itemId, item.name, 'EDIT', `Removed split sub-item: ${removed.name}`);
+            renderPageItems();
+            autoSave();
+        }
+
+        function adjustEditCost(id, mult) {
+            let costInput = document.getElementById(`editCost-${id}`);
+            let adjInput = document.getElementById(`adjustCost-${id}`);
+            let item = getActiveItemsArray().find(i => i.id === id);
+
+            if (item && item.subItems && item.subItems.length > 0) {
+                alert("This item has sub-items attached. Please add or adjust sub-items instead of modifying the main sum.");
+                adjInput.value = '';
+                return;
+            }
+
+            let cost = parseCostExpression(costInput.value);
+            let adj = parseCostExpression(adjInput.value);
+            if (adj > 0) {
+                let newCost = fmt(cost + (adj * mult));
+                costInput.value = newCost;
+
+                let itemName = document.getElementById(`editName-${id}`).value;
+                let verb = mult > 0 ? "Added" : "Reduced";
+                logHistory(id, itemName, 'ADJUST', `${verb} ${adj}. New cost: ${newCost}`);
+                adjInput.value = '';
+            }
+        }
+
+        function toggleEditItem(id) {
+            let item = getActiveItemsArray().find(i => i.id === id);
+            if (item) { item.isEditing = !item.isEditing; renderPageItems(); }
+        }
 
         function saveEditItem(id) {
             syncSubItems(id);
             let item = getActiveItemsArray().find(i => i.id === id);
             if (item) {
-                let newName = document.getElementById(`editName-${id}`).value;
-
+                let newName = document.getElementById(`editName-${id}`).value.trim();
                 let hasSubItems = item.subItems && item.subItems.length > 0;
-                let newCost = hasSubItems ? item.cost : (parseFloat(document.getElementById(`editCost-${id}`).value) || 0);
+                let newCost = hasSubItems ? item.cost : parseCostExpression(document.getElementById(`editCost-${id}`).value);
 
                 if (item.name !== newName || (!hasSubItems && item.cost !== newCost)) {
                     logHistory(id, newName, 'EDIT', `Changed properties (Name: ${item.name}->${newName}, Cost: ${item.cost}->${newCost})`);
@@ -2046,14 +3873,15 @@
 
                 item.name = newName;
                 if (!hasSubItems) item.cost = newCost;
-
                 item.qty = parseFloat(document.getElementById(`editQty-${id}`).value) || 1;
                 item.isIncome = document.getElementById(`editType-${id}`).value === 'income';
                 item.currency = document.getElementById(`editCurrency-${id}`).value;
                 item.color = document.getElementById(`editColor-${id}`).value;
                 let checkboxes = document.querySelectorAll(`.edit-tag-cb-${id}:checked`);
                 item.tags = Array.from(checkboxes).map(cb => cb.value);
-                item.isEditing = false; renderPageItems(); autoSave();
+                item.isEditing = false;
+                renderPageItems();
+                autoSave();
             }
         }
 
@@ -2062,9 +3890,7 @@
                 let arr = getActiveItemsArray();
                 let idx = arr.findIndex(i => i.id === id);
                 let item = arr[idx];
-
                 logHistory(id, item.name, 'DELETE', `Item deleted (${item.cost} ${item.currency})`);
-
                 arr.splice(idx, 1);
                 renderPageItems();
                 autoSave();
@@ -2078,16 +3904,64 @@
                 item.done = !item.done;
                 logHistory(id, item.name, 'EDIT', `Marked as ${item.done ? 'Done' : 'Pending'}`);
             }
-            if (activeMonth === targetMonth) renderPageItems(); else { renderBoard(); renderExtras(); }
+            if (activeMonth === targetMonth) renderPageItems();
+            else { renderBoard(); renderExtras(); }
             autoSave();
         }
 
-        function dashDragStart(ev, id, sourceMonth) { draggedDashItemId = id; draggedDashSourceMonth = sourceMonth; ev.dataTransfer.setData("id", id); ev.dataTransfer.setData("sourceMonth", sourceMonth); }
-        function dropToMonth(ev, targetMonth) { let id = ev.dataTransfer.getData("id"); let sourceMonth = ev.dataTransfer.getData("sourceMonth"); if (sourceMonth && sourceMonth !== targetMonth) { let sArr = sourceMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][sourceMonth].items; let tArr = targetMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][targetMonth].items; tArr.push(sArr.splice(sArr.findIndex(i => i.id === id), 1)[0]); renderBoard(); renderExtras(); } }
-        function dashDropOnItem(ev, targetId, targetMonth) { ev.preventDefault(); ev.stopPropagation(); if (!draggedDashItemId) return; let sArr = draggedDashSourceMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][draggedDashSourceMonth].items; let tArr = targetMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][targetMonth].items; let dIdx = sArr.findIndex(i => i.id === draggedDashItemId); let [draggedItem] = sArr.splice(dIdx, 1); let tIdx = tArr.findIndex(i => i.id === targetId); tArr.splice(tIdx, 0, draggedItem); draggedDashItemId = null; draggedDashSourceMonth = null; renderBoard(); renderExtras(); autoSave(); }
-        function pageItemDragStart(ev, id) { draggedPageItemId = id; }
-        function pageItemDrop(ev, targetId) { ev.preventDefault(); if (draggedPageItemId === targetId || !draggedPageItemId) return; let items = getActiveItemsArray(); let dIdx = items.findIndex(i => i.id === draggedPageItemId); let tIdx = items.findIndex(i => i.id === targetId); items.splice(tIdx, 0, items.splice(dIdx, 1)[0]); draggedPageItemId = null; document.getElementById('pageSort').value = 'none'; renderPageItems(); autoSave(); }
+        function dashDragStart(ev, id, sourceMonth) {
+            draggedDashItemId = id;
+            draggedDashSourceMonth = sourceMonth;
+            ev.dataTransfer.setData("id", id);
+            ev.dataTransfer.setData("sourceMonth", sourceMonth);
+        }
 
+        function dropToMonth(ev, targetMonth) {
+            let id = ev.dataTransfer.getData("id");
+            let sourceMonth = ev.dataTransfer.getData("sourceMonth");
+            if (sourceMonth && sourceMonth !== targetMonth) {
+                let sArr = sourceMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][sourceMonth].items;
+                let tArr = targetMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][targetMonth].items;
+                tArr.push(sArr.splice(sArr.findIndex(i => i.id === id), 1)[0]);
+                renderBoard();
+                renderExtras();
+            }
+        }
+
+        function dashDropOnItem(ev, targetId, targetMonth) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            if (!draggedDashItemId) return;
+            let sArr = draggedDashSourceMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][draggedDashSourceMonth].items;
+            let tArr = targetMonth === 'LongTerm' ? state.longTerm.items : state.years[currentYear][targetMonth].items;
+            let dIdx = sArr.findIndex(i => i.id === draggedDashItemId);
+            let [draggedItem] = sArr.splice(dIdx, 1);
+            let tIdx = tArr.findIndex(i => i.id === targetId);
+            tArr.splice(tIdx, 0, draggedItem);
+            draggedDashItemId = null;
+            draggedDashSourceMonth = null;
+            renderBoard();
+            renderExtras();
+            autoSave();
+        }
+
+        function pageItemDragStart(ev, id) { draggedPageItemId = id; }
+        function pageItemDrop(ev, targetId) {
+            ev.preventDefault();
+            if (draggedPageItemId === targetId || !draggedPageItemId) return;
+            let items = getActiveItemsArray();
+            let dIdx = items.findIndex(i => i.id === draggedPageItemId);
+            let tIdx = items.findIndex(i => i.id === targetId);
+            items.splice(tIdx, 0, items.splice(dIdx, 1)[0]);
+            draggedPageItemId = null;
+            document.getElementById('pageSort').value = 'none';
+            renderPageItems();
+            autoSave();
+        }
+
+        // ============================================================
+        // Tags Management
+        // ============================================================
         function openTagsModal() { document.getElementById('tagsModal').style.display = 'flex'; renderTags(); }
         function renderTags() {
             let searchVal = (document.getElementById('tagsModalSearch') ? document.getElementById('tagsModalSearch').value : '').toLowerCase();
@@ -2098,20 +3972,73 @@
             }
             updateTagSelects();
         }
-        function addTag() { let t = document.getElementById('newTag').value.trim(); if (t && !state.tags.includes(t)) { state.tags.push(t); state.tags.sort((a, b) => a.localeCompare(b)); document.getElementById('newTag').value = ''; renderTags(); autoSave(); } }
-        function removeTag(idx) { state.tags.splice(idx, 1); renderTags(); autoSave(); }
-        function updateTagSelects() { renderNewEntryTags(); }
 
-        function initColorPicker() { document.getElementById('colorPicker').innerHTML = presetColors.map(c => `<div class="color-swatch" style="background:${c}" onclick="selectColor(this, '${c}')"></div>`).join(''); selectColor(document.getElementById('colorPicker').firstElementChild, presetColors[0]); }
-        function selectColor(elem, color) { document.querySelectorAll('#colorPicker .color-swatch').forEach(e => e.classList.remove('selected')); if (elem) elem.classList.add('selected'); selectedColor = color; document.getElementById('customColor').value = color; }
-        function selectCustomColor(color) { document.querySelectorAll('#colorPicker .color-swatch').forEach(e => e.classList.remove('selected')); selectedColor = color; }
+        function addTag() {
+            let t = document.getElementById('newTag').value.trim();
+            if (t && !state.tags.includes(t)) {
+                state.tags.push(t);
+                state.tags.sort((a, b) => a.localeCompare(b));
+                document.getElementById('newTag').value = '';
+                renderTags();
+                autoSave();
+            }
+        }
 
+        function removeTag(idx) {
+            state.tags.splice(idx, 1);
+            renderTags();
+            autoSave();
+        }
+
+        function updateTagSelects() {
+            renderNewEntryTags();
+        }
+
+        function renderNewEntryTags() {
+            let searchVal = (document.getElementById('newEntryTagSearch') ? document.getElementById('newEntryTagSearch').value : '').toLowerCase();
+            let filteredTags = state.tags.filter(t => !searchVal || t.toLowerCase().includes(searchVal));
+            document.getElementById('newEntryTagsContainer').innerHTML = filteredTags.map(t => {
+                let isSel = newEntryTags.includes(t);
+                return `<span class="tag-badge" style="opacity: ${isSel ? 1 : 0.4}; padding: 6px 12px; font-size: 0.9em; margin: 2px;" onclick="toggleNewEntryTag('${t}')">${t}</span>`;
+            }).join('');
+            if (filteredTags.length === 0 && searchVal) {
+                document.getElementById('newEntryTagsContainer').innerHTML = '<span style="color:#aaa; font-size:0.9em;">No tags match "' + searchVal + '"</span>';
+            }
+        }
+
+        function toggleNewEntryTag(t) {
+            if (newEntryTags.includes(t)) newEntryTags = newEntryTags.filter(x => x !== t);
+            else newEntryTags.push(t);
+            renderNewEntryTags();
+        }
+
+        function initColorPicker() {
+            document.getElementById('colorPicker').innerHTML = presetColors.map(c => `<div class="color-swatch" style="background:${c}" onclick="selectColor(this, '${c}')"></div>`).join('');
+            selectColor(document.getElementById('colorPicker').firstElementChild, presetColors[0]);
+        }
+
+        function selectColor(elem, color) {
+            document.querySelectorAll('#colorPicker .color-swatch').forEach(e => e.classList.remove('selected'));
+            if (elem) elem.classList.add('selected');
+            selectedColor = color;
+            document.getElementById('customColor').value = color;
+        }
+
+        function selectCustomColor(color) {
+            document.querySelectorAll('#colorPicker .color-swatch').forEach(e => e.classList.remove('selected'));
+            selectedColor = color;
+        }
+
+        // ============================================================
+        // Change #2: Analytics Reworked Logic & UI
+        // ============================================================
         function openAnalyticsPage() {
             document.getElementById('dashboardView').style.display = 'none';
             document.getElementById('analyticsView').style.display = 'flex';
 
             if (!analyticsInitialized) {
-                aYearStart = currentYear; aYearEnd = currentYear;
+                aYearStart = currentYear;
+                aYearEnd = currentYear;
                 document.getElementById('aUpToCurrent').checked = false;
                 aActiveTags = [...state.tags, "Untagged", "Base Salary"];
                 renderAnalyticsUI(true);
@@ -2128,16 +4055,49 @@
             renderExtras();
         }
 
-        function toggleAnalyticsTag(t) { if (aActiveTags.includes(t)) aActiveTags = aActiveTags.filter(x => x !== t); else aActiveTags.push(t); triggerAnalytics(); }
+        function setAnalyticsType(type) {
+            analyticsType = type;
+            triggerAnalytics();
+        }
+
+        function selectAnalyticsPreset(preset) {
+            let yArr = Object.keys(state.years).map(Number);
+            let minY = Math.min(...yArr);
+            let maxY = Math.max(...yArr);
+
+            if (preset === 'this_year') {
+                document.getElementById('aYearFrom').value = currentYear;
+                document.getElementById('aYearTo').value = currentYear;
+                document.getElementById('aMonthFrom').value = "0";
+                document.getElementById('aMonthTo').value = "11";
+            } else if (preset === 'all_time') {
+                document.getElementById('aYearFrom').value = minY;
+                document.getElementById('aYearTo').value = maxY;
+                document.getElementById('aMonthFrom').value = "0";
+                document.getElementById('aMonthTo').value = "11";
+            } else if (preset === 'last_6_months') {
+                let fDate = getFinancialDate();
+                let endM = fDate.monthIdx;
+                let endY = fDate.year;
+                let startM = endM - 5;
+                let startY = endY;
+                if (startM < 0) { startM += 12; startY -= 1; }
+                document.getElementById('aYearFrom').value = startY;
+                document.getElementById('aYearTo').value = endY;
+                document.getElementById('aMonthFrom').value = startM.toString();
+                document.getElementById('aMonthTo').value = endM.toString();
+            }
+            triggerAnalytics();
+        }
+
+        function toggleAnalyticsTag(t) {
+            if (aActiveTags.includes(t)) aActiveTags = aActiveTags.filter(x => x !== t);
+            else aActiveTags.push(t);
+            triggerAnalytics();
+        }
 
         function selectAllYearsAnalytics() {
-            let yArr = Object.keys(state.years).map(Number);
-            document.getElementById('aYearFrom').value = Math.min(...yArr);
-            document.getElementById('aYearTo').value = Math.max(...yArr);
-            document.getElementById('aMonthFrom').value = "0";
-            document.getElementById('aMonthTo').value = "11";
-            aActiveTags = [...state.tags, "Untagged", "Base Salary"];
-            triggerAnalytics();
+            selectAnalyticsPreset('all_time');
         }
 
         function triggerAnalytics() { renderAnalyticsUI(false); }
@@ -2171,10 +4131,19 @@
             let sortMode = document.getElementById('analyticsSort').value || 'valDesc';
             let limitToCurrent = document.getElementById('aUpToCurrent').checked;
 
+            // Highlight active chart type pill
+            document.querySelectorAll('.chart-pill').forEach(b => b.classList.remove('active'));
+            if (analyticsType === 'bar' && document.getElementById('pillBar')) document.getElementById('pillBar').classList.add('active');
+            if (analyticsType === 'pie' && document.getElementById('pillPie')) document.getElementById('pillPie').classList.add('active');
+            if (analyticsType === 'pyramid' && document.getElementById('pillPyramid')) document.getElementById('pillPyramid').classList.add('active');
+
             let displayTags = [...state.tags, "Untagged"];
             if (targetFilter === 'income') displayTags.push("Base Salary");
 
-            let totals = {}; let colors = {}; let grandTotal = 0; let totalMonthsCount = 0;
+            let totals = {};
+            let colors = {};
+            let grandTotal = 0;
+            let totalMonthsCount = 0;
 
             let fDate = getFinancialDate();
             let currentMonthVal = fDate.year * 100 + fDate.monthIdx;
@@ -2261,7 +4230,7 @@
             let filteredDisplayTags = displayTags.filter(t => !analyticsSearchVal || t.toLowerCase().includes(analyticsSearchVal));
             let tagsFilterHtml = filteredDisplayTags.map(t => {
                 let isSel = aActiveTags.includes(t);
-                return `<span class="tag-badge" style="opacity: ${isSel ? 1 : 0.4}; cursor:pointer; padding: 6px 12px; font-size: 0.9em;" onclick="toggleAnalyticsTag('${t}')">${t}</span>`;
+                return `<span class="tag-badge" style="opacity: ${isSel ? 1 : 0.4}; cursor:pointer; padding: 6px 10px; font-size: 0.85em;" onclick="toggleAnalyticsTag('${t}')">${t}</span>`;
             }).join('');
             if (filteredDisplayTags.length === 0 && analyticsSearchVal) {
                 tagsFilterHtml = '<span style="color:#aaa; font-size:0.9em;">No tags match "' + analyticsSearchVal + '"</span>';
@@ -2269,11 +4238,35 @@
             document.getElementById('analyticsTagsFilter').innerHTML = tagsFilterHtml;
 
             let actualMonths = totalMonthsCount || 1;
-            let labelMode = targetFilter === 'income' ? 'Income' : 'Spent/Planned';
-            let html = `<div style="font-size:1.2em; margin-bottom:10px; border-bottom:1px dashed var(--border); padding-bottom:10px;">Filtered ${labelMode}: <strong>${fmt(grandTotal)}₾</strong> | Monthly Avg (${totalMonthsCount} mos): <strong>${fmt(grandTotal / actualMonths)}₾/mo</strong></div>`;
+            let labelMode = targetFilter === 'income' ? 'Income' : 'Expenses';
 
-            if (grandTotal === 0) { html += `<div>No data matches your filters.</div>`; }
-            else {
+            // Find top category
+            let topCat = 'None';
+            let topVal = 0;
+            Object.keys(totals).forEach(k => {
+                if (totals[k] > topVal) { topVal = totals[k]; topCat = k; }
+            });
+
+            // Render KPI bar
+            document.getElementById('analyticsKpiBar').innerHTML = `
+                <div class="analytics-kpi-card">
+                    <div class="analytics-kpi-label">Total Filtered ${labelMode}</div>
+                    <div class="analytics-kpi-value ${targetFilter === 'income' ? 'pos' : 'neg'}">${fmt(grandTotal)}₾</div>
+                </div>
+                <div class="analytics-kpi-card">
+                    <div class="analytics-kpi-label">Monthly Average (${totalMonthsCount} mos)</div>
+                    <div class="analytics-kpi-value">${fmt(grandTotal / actualMonths)}₾/mo</div>
+                </div>
+                <div class="analytics-kpi-card">
+                    <div class="analytics-kpi-label">Top Category (${labelMode})</div>
+                    <div class="analytics-kpi-value" style="font-size:1.15em; color:var(--accent);">${topCat} (${fmt(topVal)}₾)</div>
+                </div>
+            `;
+
+            let html = '';
+            if (grandTotal === 0) {
+                html = `<div style="color:#aaa; text-align:center; padding:40px; font-size:1.1em;">No data matches your selected filters.</div>`;
+            } else {
                 let sortedKeys = Object.keys(totals);
                 if (groupBy === 'month' && sortMode === 'valDesc') { sortedKeys.sort((a, b) => totals[b] - totals[a]); }
                 else if (groupBy === 'month' && sortMode === 'valAsc') { sortedKeys.sort((a, b) => totals[a] - totals[b]); }
@@ -2285,51 +4278,105 @@
                 }
 
                 if (analyticsType === 'bar') {
+                    html += `<div style="display:flex; flex-direction:column; gap:16px;">`;
                     sortedKeys.forEach(key => {
                         let val = totals[key];
                         if (val > 0) {
                             let pct = ((val / grandTotal) * 100).toFixed(1);
                             let label = groupBy === 'tag' ? key : (groupBy === 'month' ? key : 'Color Group');
-                            html += `<div style="margin-bottom:15px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><strong>${label}</strong><span>${fmt(val)}₾ (${pct}%) | Avg: ${fmt(val / actualMonths)}₾/mo</span></div>
-                        <div style="background:var(--card); width:100%; height:10px; border-radius:5px; overflow:hidden; border:1px solid var(--border);">
-                            <div style="background:${colors[key]}; width:${pct}%; height:100%;"></div>
-                        </div></div>`;
+                            html += `
+                            <div>
+                                <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.95em;">
+                                    <strong><span class="legend-color" style="background:${colors[key]};"></span>${label}</strong>
+                                    <span><strong>${fmt(val)}₾</strong> (${pct}%) · Avg: ${fmt(val / actualMonths)}₾/mo</span>
+                                </div>
+                                <div style="background:var(--bg); width:100%; height:12px; border-radius:6px; overflow:hidden; border:1px solid var(--border);">
+                                    <div style="background:${colors[key]}; width:${pct}%; height:100%; border-radius:6px; transition:width 0.4s ease;"></div>
+                                </div>
+                            </div>`;
                         }
                     });
+                    html += `</div>`;
                 } else if (analyticsType === 'pie') {
-                    let conic = []; let acc = 0; let legendHtml = `<div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:20px;">`;
+                    let conic = [];
+                    let acc = 0;
+                    let legendHtml = `<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:25px; padding-top:16px; border-top:1px dashed var(--border);">`;
+
                     sortedKeys.forEach(key => {
                         let val = totals[key];
                         if (val > 0) {
                             let pctNum = (val / grandTotal) * 100;
                             conic.push(`${colors[key]} ${acc}% ${acc + pctNum}%`);
                             let label = groupBy === 'tag' ? key : (groupBy === 'month' ? key : 'Color Group');
-                            legendHtml += `<div><span class="legend-color" style="background:${colors[key]}"></span>${label} (${pctNum.toFixed(1)}%)</div>`;
+                            legendHtml += `<div><span class="legend-color" style="background:${colors[key]}"></span><strong>${label}</strong>: ${fmt(val)}₾ (${pctNum.toFixed(1)}%)</div>`;
                             acc += pctNum;
                         }
                     });
                     legendHtml += `</div>`;
-                    html += `<div class="pie-chart" style="background: conic-gradient(${conic.join(', ')});"></div>` + legendHtml;
+
+                    html += `
+                        <div class="donut-container">
+                            <div class="pie-chart" style="background: conic-gradient(${conic.join(', ')});"></div>
+                            <div class="donut-center-cutout">
+                                <div style="font-size:1.1em; font-weight:bold; color:var(--text);">${fmt(grandTotal)}₾</div>
+                                <div style="font-size:0.75em; color:#aaa; text-transform:uppercase;">Total</div>
+                            </div>
+                        </div>
+                        ${legendHtml}
+                    `;
                 } else if (analyticsType === 'pyramid') {
                     let maxVal = Math.max(...Object.values(totals));
-                    let pyramidHtml = `<div style="display:flex; flex-direction:column; align-items:center; gap:5px; width:100%; margin-top:20px; padding-bottom: 20px;">`;
+                    let pyramidHtml = `<div style="display:flex; flex-direction:column; align-items:center; gap:8px; width:100%; margin-top:10px;">`;
                     sortedKeys.forEach(key => {
                         let val = totals[key];
                         if (val > 0) {
                             let pctOfTotal = ((val / grandTotal) * 100).toFixed(1);
-                            let pctOfMax = (val / maxVal) * 100;
+                            let pctOfMax = Math.max(15, (val / maxVal) * 100);
                             let label = groupBy === 'tag' ? key : (groupBy === 'month' ? key : 'Color Group');
                             pyramidHtml += `
-                    <div style="width: ${pctOfMax}%; min-width: fit-content; background: ${colors[key]}; padding: 6px 12px; border-radius: 4px; text-align: center; color: white; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); box-sizing: border-box; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
-                        ${label} <span style="font-size:0.85em; opacity:0.9; margin-left:8px;">${fmt(val)}₾ (${pctOfTotal}%) | Avg: ${fmt(val / actualMonths)}₾/mo</span>
-                    </div>`;
+                            <div style="width: ${pctOfMax}%; min-width: 220px; background: ${colors[key]}; padding: 8px 16px; border-radius: 6px; text-align: center; color: white; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); box-sizing: border-box; box-shadow: 0 4px 8px rgba(0,0,0,0.25); display:flex; justify-content:space-between; align-items:center;">
+                                <span>${label}</span>
+                                <span style="font-size:0.88em; opacity:0.95;">${fmt(val)}₾ (${pctOfTotal}%)</span>
+                            </div>`;
                         }
                     });
                     pyramidHtml += `</div>`;
                     html += pyramidHtml;
                 }
+
+                // Add detailed breakdown summary table
+                html += `
+                    <div style="margin-top:25px; border-top:1px dashed var(--border); padding-top:18px;">
+                        <div style="font-weight:bold; font-size:1.05em; margin-bottom:12px;">📋 Breakdown Summary</div>
+                        <div style="overflow-x:auto;">
+                            <table style="width:100%; border-collapse:collapse; font-size:0.9em; text-align:left;">
+                                <thead>
+                                    <tr style="border-bottom:1px solid var(--border); color:#aaa;">
+                                        <th style="padding:8px;">Category / Name</th>
+                                        <th style="padding:8px; text-align:right;">Amount</th>
+                                        <th style="padding:8px; text-align:right;">% of Total</th>
+                                        <th style="padding:8px; text-align:right;">Monthly Avg</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${sortedKeys.map(k => {
+                                        let v = totals[k];
+                                        let p = ((v / grandTotal) * 100).toFixed(1);
+                                        return `
+                                        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                                            <td style="padding:8px;"><span class="legend-color" style="background:${colors[k]};"></span>${k}</td>
+                                            <td style="padding:8px; text-align:right; font-weight:bold;">${fmt(v)}₾</td>
+                                            <td style="padding:8px; text-align:right;">${p}%</td>
+                                            <td style="padding:8px; text-align:right; color:#aaa;">${fmt(v / actualMonths)}₾/mo</td>
+                                        </tr>`;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
             }
+
             document.getElementById('analyticsContent').innerHTML = html;
         }
 
@@ -2338,9 +4385,10 @@
                 localStorage.setItem('financeDataV10', JSON.stringify(state));
                 let d = new Date();
                 let el = document.getElementById('save-status');
-                el.innerText = `Autosaved ${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`;
+                if (el) el.innerText = `Autosaved ${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`;
             } else {
-                document.getElementById('save-status').innerText = 'Autosave Disabled';
+                let el = document.getElementById('save-status');
+                if (el) el.innerText = 'Autosave Disabled';
             }
         }
 
@@ -2351,10 +4399,16 @@
             }
         }
 
-        function exportJSON() { const dl = document.createElement('a'); dl.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2))); dl.setAttribute("download", `planner_backup_${currentYear}.json`); dl.click(); }
+        function exportJSON() {
+            const dl = document.createElement('a');
+            dl.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2)));
+            dl.setAttribute("download", `planner_backup_${currentYear}.json`);
+            dl.click();
+        }
 
-        // --- IMPORT & MERGE DIFF ENGINE ---
-
+        // ============================================================
+        // Change #9: Import with Delete / Merge Confirmation
+        // ============================================================
         function itemsEqual(a, b) {
             return a.name === b.name && a.cost === b.cost && a.qty === b.qty && a.isIncome === b.isIncome && a.currency === b.currency && a.done === b.done && a.color === b.color && JSON.stringify(a.tags) === JSON.stringify(b.tags) && JSON.stringify(a.subItems) === JSON.stringify(b.subItems);
         }
@@ -2376,15 +4430,108 @@
             return map;
         }
 
+        function hasExistingData() {
+            if (state.piggyBanks && state.piggyBanks.length > 0) return true;
+            if (state.loans && state.loans.length > 0) return true;
+            if (state.manualLedger && state.manualLedger.length > 0) return true;
+            if (state.longTerm && state.longTerm.items && state.longTerm.items.length > 0) return true;
+            for (let y in state.years) {
+                let yd = state.years[y];
+                for (let m of months) {
+                    if (yd[m] && yd[m].items && yd[m].items.length > 0) return true;
+                }
+            }
+            return false;
+        }
+
         function importJSON(event) {
-            const file = event.target.files[0]; if (!file) return;
+            const file = event.target.files[0];
+            if (!file) return;
             const reader = new FileReader();
             reader.onload = function (e) {
                 try {
                     let parsed = JSON.parse(e.target.result);
-                    startMergeProcess(parsed);
-                } catch (err) { alert("Invalid JSON file"); }
-            }; reader.readAsText(file); event.target.value = '';
+                    pendingImportData = parsed;
+                    if (hasExistingData()) {
+                        document.getElementById('importChoiceModal').style.display = 'flex';
+                    } else {
+                        // Empty current state, load directly
+                        applyDirectReplace(parsed);
+                    }
+                } catch (err) { alert("Invalid JSON file: " + err.message); }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function importChoiceReplace() {
+            if (!pendingImportData) return;
+            document.getElementById('importChoiceModal').style.display = 'none';
+            applyDirectReplace(pendingImportData);
+            pendingImportData = null;
+        }
+
+        function applyDirectReplace(parsed) {
+            state = {
+                theme: 'dark',
+                tags: ["Essentials", "Hardware", "Leisure", "Savings"],
+                years: {},
+                longTerm: { items: [] },
+                piggyBanks: [],
+                notes: "",
+                history: [],
+                settings: {},
+                loans: [],
+                manualLedger: [],
+                ...parsed
+            };
+
+            if (!state.settings) state.settings = {};
+            if (!state.history) state.history = [];
+            if (!state.loans) state.loans = [];
+            if (!state.manualLedger) state.manualLedger = [];
+            if (!state.longTerm) state.longTerm = { items: [] };
+            if (!state.piggyBanks) state.piggyBanks = [];
+
+            currentYear = getFinancialDate().year;
+            if (!state.years[currentYear]) generateYear(currentYear);
+
+            for (let y in state.years) {
+                if (state.years[y].yearlySalary === undefined) state.years[y].yearlySalary = 2000;
+                months.forEach(m => {
+                    if (state.years[y][m]) state.years[y][m].items.forEach(i => {
+                        if (i.isIncome === undefined) i.isIncome = false;
+                        if (typeof i.tag === 'string') { i.tags = [i.tag]; delete i.tag; }
+                        if (!i.tags) i.tags = [];
+                        if (!i.currency) i.currency = 'GEL';
+                        if (!i.subItems) i.subItems = [];
+                    });
+                });
+            }
+            if (state.tags) state.tags.sort((a, b) => a.localeCompare(b));
+
+            autoSave();
+            initUI();
+
+            let el = document.getElementById('save-status');
+            if (el) {
+                el.innerText = 'Import Loaded (Previous Data Cleared)!';
+                el.style.color = '#ff9800';
+                setTimeout(() => { autoSave(); el.style.color = '#aaa'; }, 4000);
+            }
+        }
+
+        function importChoiceMerge() {
+            if (!pendingImportData) return;
+            document.getElementById('importChoiceModal').style.display = 'none';
+            let data = pendingImportData;
+            pendingImportData = null;
+            startMergeProcess(data);
+        }
+
+        function importChoiceCancel() {
+            pendingImportData = null;
+            document.getElementById('importChoiceModal').style.display = 'none';
         }
 
         function startMergeProcess(importedData) {
@@ -2411,19 +4558,19 @@
                 }
             });
 
-            let localPig = {}; state.piggyBanks.forEach(p => localPig[p.id] = p);
+            let localPig = {}; (state.piggyBanks || []).forEach(p => localPig[p.id] = p);
             let impPig = {}; (importedData.piggyBanks || []).forEach(p => impPig[p.id] = p);
 
             Object.keys(impPig).forEach(id => {
                 let imp = impPig[id];
                 let loc = localPig[id];
-                if (!loc) { mergeConflicts.push({ id, type: 'pig_new', imp, choice: 'import', title: `New Piggy Bank` }); }
+                if (!loc) { mergeConflicts.push({ id, type: 'pig_new', imp, choice: 'import', title: `New Piggy Bank Vault` }); }
                 else if (loc.name !== imp.name || loc.balance !== imp.balance || loc.monthlyPlan !== imp.monthlyPlan) {
-                    mergeConflicts.push({ id, type: 'pig_mod', loc, imp, choice: 'import', title: `Modified Piggy Bank` });
+                    mergeConflicts.push({ id, type: 'pig_mod', loc, imp, choice: 'import', title: `Modified Piggy Bank Vault` });
                 }
             });
             Object.keys(localPig).forEach(id => {
-                if (!impPig[id]) mergeConflicts.push({ id, type: 'pig_del', loc: localPig[id], choice: 'local', title: `Piggy Bank Missing in Import` });
+                if (!impPig[id]) mergeConflicts.push({ id, type: 'pig_del', loc: localPig[id], choice: 'local', title: `Vault Missing in Import` });
             });
 
             if (mergeConflicts.length === 0) {
@@ -2498,9 +4645,11 @@
             if (activeMonth) { closeMonthPage(); openMonthPage(activeMonth); }
 
             let el = document.getElementById('save-status');
-            el.innerText = `Merge Completed!`;
-            el.style.color = "var(--accent)";
-            setTimeout(() => { autoSave(); el.style.color = "#aaa"; }, 3000);
+            if (el) {
+                el.innerText = `Merge Completed!`;
+                el.style.color = "var(--accent)";
+                setTimeout(() => { autoSave(); el.style.color = "#aaa"; }, 3000);
+            }
         }
 
         function finalizeMerge() {
@@ -2521,6 +4670,28 @@
 
             if (imp.tags) { imp.tags.forEach(t => { if (!newState.tags.includes(t)) newState.tags.push(t); }); }
             if (imp.notes && newState.notes !== imp.notes) { newState.notes = newState.notes ? newState.notes + "\n\n--- IMPORTED NOTE ---\n" + imp.notes : imp.notes; }
+
+            if (imp.loans) {
+                if (!newState.loans) newState.loans = [];
+                let existingLoanIds = new Set(newState.loans.map(l => l.id));
+                imp.loans.forEach(l => {
+                    if (!existingLoanIds.has(l.id)) {
+                        newState.loans.push(l);
+                        existingLoanIds.add(l.id);
+                    }
+                });
+            }
+
+            if (imp.manualLedger) {
+                if (!newState.manualLedger) newState.manualLedger = [];
+                let existingLedgerIds = new Set(newState.manualLedger.map(m => m.id));
+                imp.manualLedger.forEach(m => {
+                    if (!existingLedgerIds.has(m.id)) {
+                        newState.manualLedger.push(m);
+                        existingLedgerIds.add(m.id);
+                    }
+                });
+            }
 
             if (imp.history) {
                 let existingIds = new Set(newState.history.map(h => h.id));
@@ -2583,7 +4754,6 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // Show install button in header
             let installBtn = document.createElement('button');
             installBtn.id = 'installBtn';
             installBtn.className = 'btn-secondary';
@@ -2597,32 +4767,34 @@
                 }
                 deferredPrompt = null;
             };
-            // Add pulse animation
             if (!document.getElementById('pwa-pulse-style')) {
                 let style = document.createElement('style');
                 style.id = 'pwa-pulse-style';
                 style.textContent = '@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(76,175,80,0.4); } 50% { box-shadow: 0 0 0 8px rgba(76,175,80,0); } }';
                 document.head.appendChild(style);
             }
-            document.querySelector('header').insertBefore(installBtn, document.querySelector('header').children[1]);
+            let hdr = document.querySelector('header');
+            if (hdr && hdr.children.length > 1) {
+                hdr.insertBefore(installBtn, hdr.children[1]);
+            }
         });
 
-        // Hide install button after app is installed
         window.addEventListener('appinstalled', () => {
             let btn = document.getElementById('installBtn');
             if (btn) btn.remove();
             deferredPrompt = null;
         });
 
-        // Update theme-color meta tag when theme changes
         const origChangeTheme = changeTheme;
         changeTheme = function(th) {
             origChangeTheme(th);
             const themeColors = { dark: '#1e1e1e', light: '#f5f7fa', ocean: '#0f172a', sunset: '#2a1610', nature: '#f0f4f0', berry: '#2d1b2e' };
-            document.querySelector('meta[name="theme-color"]').content = themeColors[th] || '#1e1e1e';
+            let meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.content = themeColors[th] || '#1e1e1e';
         };
 
         init();
+
     </script>
 </body>
 
